@@ -1,0 +1,100 @@
+name: Check YAML
+
+# See: https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows
+on:
+  push:
+    paths:
+      - ".github/workflows/check-yaml.yml"
+      - ".yamllint*"
+      # Source: https://github.com/ikatyang/linguist-languages/blob/master/data/YAML.json (used by Prettier).
+      - "**/.clang-format"
+      - "**/.clang-tidy"
+      - "**/.gemrc"
+      - "**/glide.lock"
+      - "**.yml"
+      - "**.mir"
+      - "**.reek"
+      - "**.rviz"
+      - "**.sublime-syntax"
+      - "**.syntax"
+      - "**.yaml"
+      - "**.yaml-tmlanguage"
+      - "**.yaml.sed"
+      - "**.yml.mysql"
+  pull_request:
+    paths:
+      - ".github/workflows/check-yaml.yml"
+      - ".yamllint*"
+      - "**/.clang-format"
+      - "**/.clang-tidy"
+      - "**/.gemrc"
+      - "**/glide.lock"
+      - "**.yml"
+      - "**.mir"
+      - "**.reek"
+      - "**.rviz"
+      - "**.sublime-syntax"
+      - "**.syntax"
+      - "**.yaml"
+      - "**.yaml-tmlanguage"
+      - "**.yaml.sed"
+      - "**.yml.mysql"
+  schedule:
+    # Run every Tuesday at 8 AM UTC to catch breakage caused by changes to yamllint.
+    - cron: "0 8 * * TUE"
+  workflow_dispatch:
+  repository_dispatch:
+
+jobs:
+  check:
+    name: ${{ matrix.configuration.name }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        configuration:
+          - name: Generate problem matcher output
+            # yamllint's "github" output type produces annotated diffs, but is not useful to humans reading the log.
+            format: github
+            # The other matrix job is used to set the result, so this job is configured to always pass.
+            fail-command: "true"
+          - name: Check formatting
+            # yamllint's "colored" output type is most suitable for humans reading the log.
+            format: colored
+            fail-command: "false"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Check YAML
+        # yamllint's "colored" output type is useful for humans reading the log.
+        run: |
+          find . \
+            -path './.git' -prune -or \
+            \( \
+              \( \
+                -name '.clang-format' -or \
+                -name '.clang-tidy' -or \
+                -name '.gemrc' -or \
+                -name '*.yml' -or \
+                -name '*.mir' -or \
+                -name '*.reek' -or \
+                -name '*.rviz' -or \
+                -name '*.sublime-syntax' -or \
+                -name '*.syntax' -or \
+                -name '*.yaml' -or \
+                -name '*.yaml-tmlanguage' -or \
+                -name '*.yaml.sed' -or \
+                -name '*.yaml.mysql' \
+              \) \
+              -and -type f \
+            \) \
+            -exec \
+              yamllint \
+                --format ${{ matrix.configuration.format }} \
+                '{}' + \
+                || \
+                ${{ matrix.configuration.fail-command }}
