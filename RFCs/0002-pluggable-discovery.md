@@ -200,6 +200,8 @@ The `remove` event looks like the following:
 
 the content is straightforward, in this case only the `address` field is reported.
 
+If the information about a port needs to be updated the discovery may send a new `add` message for the same port address without sending a `remove` first: this means that all the previous information about the port must be discarded and replaced with the new one.
+
 A demo tool is available here:
 [https://github.com/arduino/serial-discovery](https://github.com/arduino/serial-discovery#example-of-usage)
 
