@@ -241,6 +241,8 @@ It may happen that different 3rd party platforms provides the same discovery or 
 
 We can partially handle this if the `DISCOVERY_ID` field in `platform.txt` is well defined: from the CLI we could group together the platforms that requires the same discovery and launch the latest version available just once. How the different 3rd party will agree on the `DISCOVERY_ID` value population is TBD.
 
+In case different discoveries provide conflicting information (for example if two discoveries provide different information for the same port address) we could partially mitigate the issue by giving priority to the discovery that is bundled with the package of the selected board.
+
 #### Board identification
 
 The metadata `identificationPrefs` associated to a port can be used to identify the board attached to that port. The algorithm is very simple: if a board listed in the platform file `boards.txt` match the same `identificationPrefs` coming from the discovery then the board is a “candidate” board attached to that port. Some identification properties may be imperfect and not uniquely identify a board, in that case more boards can match the same `identificationPrefs`, that’s why we called it “candidate”.
