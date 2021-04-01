@@ -46,6 +46,8 @@ These tools must be in the form of executables that can be launched as a subproc
 
 ### Pluggable discovery API via stdin/stdout
 
+All the commands listed in this specification must be implemented in the discovery.
+
 After startup, the tool will just stay idle waiting for commands. The available commands are: `START`, `STOP`, `QUIT`, `LIST` and `START_SYNC`.
 
 #### START command
