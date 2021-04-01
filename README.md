@@ -50,6 +50,7 @@ Prominent examples include:
 - [Arduino CLI](https://github.com/arduino/arduino-cli)
 - [Arduino Create Agent](https://github.com/arduino/arduino-create-agent)
 - [Arduino Language Server](https://github.com/arduino/arduino-language-server)
+- [Arduino Tools extension for VS Code](https://github.com/arduino/vscode-arduino-tools)
 - [serial-discovery](https://github.com/arduino/serial-discovery)
 
 ## RFC workflow
