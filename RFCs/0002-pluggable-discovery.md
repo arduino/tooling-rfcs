@@ -32,7 +32,7 @@ The pluggable discovery aims to provide a solution to these problems.
 
 - Each port may provide metadata to identify the board model (**identification properites**)
 
-- Each port may provide metadata to identify a specific instance of the board (**serial number / MAC address**)
+- Each port may provide **properties relative to the port** (USB serial number / MAC address)
 
 - Each port must have an **unique address and protocol pair**
 
@@ -98,8 +98,8 @@ The `LIST` command executes an enumeration of the ports and returns a list of th
       "label":         <-- HOW THE PORT IS DISPLAYED ON THE GUI
       "protocol":      <-- THE PROTOCOL USED BY THE BOARD
       "protocolLabel": <-- HOW THE PROTOCOL IS DISPLAYED ON THE GUI
-      "prefs": {
-                       <-- A LIST OF PROPERTIES FOR THAT SPECIFIC BOARD
+      "properties": {
+                       <-- A LIST OF PROPERTIES OF THE PORT
       },
       "identificationPrefs": {
                        <-- A LIST OF PROPERTIES TO IDENTIFY THE BOARD MODEL
@@ -123,7 +123,7 @@ Each port has:
 
 - `protocolLabel` is the `protocol` in human readable form (for example `Serial port` or `DFU USB` or `Network (ssh)`)
 
-- `prefs` is a list of key/value pairs that represent information relative to the specific instance of the board
+- `properties` is a list of key/value pairs that represent information relative to the specific port
 
 - `identificationPrefs` is a list of key value pairs that represent information to identify the board **model**
 
@@ -138,7 +138,7 @@ To make the above more clear let’s show an example with the `serial_discovery`
       "label": "ttyACM0",
       "protocol": "serial",
       "protocolLabel": "Serial Port (USB)",
-      "prefs": {
+      "properties": {
         "pid": "0x804e",
         "vid": "0x2341",
         "serialNumber": "EBEABFD6514D32364E202020FF10181E"
@@ -152,7 +152,7 @@ To make the above more clear let’s show an example with the `serial_discovery`
 }
 ```
 
-In this case the serial port metadata comes from an USB serial converter. The USB VID/PID and USB SERIAL NUMBER properties are also reported inside `prefs`. Inside the `identificationPrefs` instead we have only the properties useful for product identification (in this case only USB VID/PID is useful to identify the board model).
+In this case the serial port metadata comes from an USB serial converter. The USB VID/PID and USB SERIAL NUMBER properties are also reported inside `properties`. Inside the `identificationPrefs` instead we have only the properties useful for product identification (in this case only USB VID/PID is useful to identify the board model).
 
 The `LIST` command performs a one-shot polling of the ports. If you need continuous monitoring of ports you should use the `START_SYNC` command.
 
@@ -172,7 +172,7 @@ The `add` event looks like the following:
   "port": {
     "address": "/dev/ttyACM0",
     "label": "ttyACM0",
-    "prefs": {
+    "properties": {
       "pid": "0x804e",
       "vid": "0x2341",
       "serialNumber": "EBEABFD6514D32364E202020FF10181E"
@@ -396,17 +396,17 @@ For example, the following port metadata coming from a pluggable discovery:
     "address": "/dev/ttyACM0",
     "label": "ttyACM0",
     "protocol": "serial",
-    "protocolLabel": "Serial Port (USB)"
-      "prefs": {
-        "pid": "0x804e",
-        "vid": "0x2341",
-        "serialNumber": "EBEABFD6514D32364E202020FF10181E"
-      },
-      "identificationPrefs": {
-        "pid": "0x804e",
-        "vid": "0x2341"
-      }
-   }
+    "protocolLabel": "Serial Port (USB)",
+    "properties": {
+      "pid": "0x804e",
+      "vid": "0x2341",
+      "serialNumber": "EBEABFD6514D32364E202020FF10181E"
+    },
+    "identificationPrefs": {
+      "pid": "0x804e",
+      "vid": "0x2341"
+    }
+  }
 }
 ```
 
@@ -432,7 +432,7 @@ Here another example:
     "label": "SSH on my-board ()192.168.1.232)",
     "protocol": "ssh",
     "protocolLabel": "SSH Network port"
-      "prefs": {
+      "properties": {
         "macprefix": "AA:BB:CC",
         "macaddress": "AA:BB:CC:DD:EE:FF"
       },
