@@ -326,7 +326,7 @@ myboard.pears.1=30
 myboard.apples.1=40
 ```
 
-will match on both `pears=20, apples=30` and `pears=30, apples=40`.
+will match on both `pears=20, apples=30` and `pears=30, apples=40` but not `pears=20, apples=40`, in that sense each "set" of identification properties is indepentent from each other and cannot be mixed for port matching.
 
 ### Upload (state of the art)
 
