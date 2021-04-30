@@ -34,7 +34,7 @@ The pluggable discovery aims to provide a solution to these problems.
 
 - Each port may provide metadata to identify a specific instance of the board (**serial number / MAC address**)
 
-- Each port must have an **unique address**
+- Each port must have an **unique address and protocol pair**
 
 - A single device may expose multiple ports
 
@@ -195,14 +195,15 @@ The `remove` event looks like the following:
 {
   "eventType": "remove",
   "port": {
-    "address": "/dev/ttyACM0"
+    "address": "/dev/ttyACM0",
+    "protocol": "serial"
   }
 }
 ```
 
-the content is straightforward, in this case only the `address` field is reported.
+the content is straightforward, in this case only the `address` and `protocol` fields are reported.
 
-If the information about a port needs to be updated the discovery may send a new `add` message for the same port address without sending a `remove` first: this means that all the previous information about the port must be discarded and replaced with the new one.
+If the information about a port needs to be updated the discovery may send a new `add` message for the same port address and protocol without sending a `remove` first: this means that all the previous information about the port must be discarded and replaced with the new one.
 
 A demo tool is available here:
 [https://github.com/arduino/serial-discovery](https://github.com/arduino/serial-discovery#example-of-usage)
