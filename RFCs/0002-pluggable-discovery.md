@@ -30,8 +30,6 @@ The pluggable discovery aims to provide a solution to these problems.
 
 - Each port must be **enumerated/discovered**
 
-- Each port may provide metadata to identify the board model (**identification properites**)
-
 - Each port may provide **properties relative to the port** (USB serial number / MAC address)
 
 - Each port must have an **unique address and protocol pair**
@@ -100,9 +98,6 @@ The `LIST` command executes an enumeration of the ports and returns a list of th
       "protocolLabel": <-- HOW THE PROTOCOL IS DISPLAYED ON THE GUI
       "properties": {
                        <-- A LIST OF PROPERTIES OF THE PORT
-      },
-      "identificationPrefs": {
-                       <-- A LIST OF PROPERTIES TO IDENTIFY THE BOARD MODEL
       }
     }, {
       ...              <-- OTHER PORTS...
@@ -125,8 +120,6 @@ Each port has:
 
 - `properties` is a list of key/value pairs that represent information relative to the specific port
 
-- `identificationPrefs` is a list of key value pairs that represent information to identify the board **model**
-
 To make the above more clear let’s show an example with the `serial_discovery`:
 
 ```JSON
@@ -142,17 +135,13 @@ To make the above more clear let’s show an example with the `serial_discovery`
         "pid": "0x804e",
         "vid": "0x2341",
         "serialNumber": "EBEABFD6514D32364E202020FF10181E"
-      },
-      "identificationPrefs": {
-        "pid": "0x804e",
-        "vid": "0x2341"
       }
     }
   ]
 }
 ```
 
-In this case the serial port metadata comes from an USB serial converter. The USB VID/PID and USB SERIAL NUMBER properties are also reported inside `properties`. Inside the `identificationPrefs` instead we have only the properties useful for product identification (in this case only USB VID/PID is useful to identify the board model).
+In this case the serial port metadata comes from an USB serial converter. Inside the `properties` we have all the properties of the port, and some of them may be useful for product identification (in this case only USB VID/PID is useful to identify the board model).
 
 The `LIST` command performs a one-shot polling of the ports. If you need continuous monitoring of ports you should use the `START_SYNC` command.
 
@@ -176,10 +165,6 @@ The `add` event looks like the following:
       "pid": "0x804e",
       "vid": "0x2341",
       "serialNumber": "EBEABFD6514D32364E202020FF10181E"
-    },
-    "identificationPrefs": {
-      "pid": "0x804e",
-      "vid": "0x2341"
     },
     "protocol": "serial",
     "protocolLabel": "Serial Port (USB)"
@@ -246,29 +231,35 @@ In case different discoveries provide conflicting information (for example if tw
 
 #### Board identification
 
-The metadata `identificationPrefs` associated to a port can be used to identify the board attached to that port. The algorithm is very simple: if a board listed in the platform file `boards.txt` match the same `identificationPrefs` coming from the discovery then the board is a “candidate” board attached to that port. Some identification properties may be imperfect and not uniquely identify a board, in that case more boards can match the same `identificationPrefs`, that’s why we called it “candidate”.
+The `properties` associated to a port can be used to identify the board attached to that port. The algorithm is simple:
 
-Let’s see an example to clarify things a bit, let suppose that we have the following `identificationPrefs` coming from the serial discovery:
+- each board listed in the platform file `boards.txt` may declare a set of `upload_port.*` properties
+- if each `upload_port.*` property has a match in the `properties` set coming from the discovery then the board is a “candidate” board attached to that port.
+
+Some port `properties` may not be precise enough to uniquely identify a board, in that case more boards may match the same set of `properties`, that’s why we called it “candidate”.
+
+Let’s see an example to clarify things a bit, let's suppose that we have the following `properties` coming from the serial discovery:
 
 ```JSON
 [...CUT...]
   "port": {
     "address": "/dev/ttyACM0",
-    "identificationPrefs": {
+    "properties": {
       "pid": "0x804e",
-      "vid": "0x2341"
+      "vid": "0x2341",
+      "serialNumber": "EBEABFD6514D32364E202020FF10181E"
     }
 [...CUT...]
 ```
 
-so we got `pid=0x804e, vid=0x2341`. Let’s suppose we have the following `boards.txt`:
+in this case we can use `vid` and `pid` to identify the board. The `serialNumber`, instead, is unique for that specific instance of the board so it can't be used to identify the board model. Let’s suppose we have the following `boards.txt`:
 
 ```
 # Arduino Zero (Prorgamming Port)
 # ---------------------------------------
 arduino_zero_edbg.name=Arduino Zero (Programming Port)
-arduino_zero_edbg.vid.0=0x03eb
-arduino_zero_edbg.pid.0=0x2157
+arduino_zero_edbg.upload_port.vid=0x03eb
+arduino_zero_edbg.upload_port.pid=0x2157
 arduino_zero_edbg.debug.tool=gdb
 arduino_zero_edbg.upload.tool=openocd
 arduino_zero_edbg.upload.protocol=sam-ba
@@ -276,28 +267,28 @@ arduino_zero_edbg.upload.protocol=sam-ba
 # Arduino Zero (Native USB Port)
 # --------------------------------------
 arduino_zero_native.name=Arduino Zero (Native USB Port)
-arduino_zero_native.vid.0=0x2341
-arduino_zero_native.pid.0=0x804d
-arduino_zero_native.vid.1=0x2341
-arduino_zero_native.pid.1=0x004d
-arduino_zero_native.vid.2=0x2341
-arduino_zero_native.pid.2=0x824d
-arduino_zero_native.vid.3=0x2341
-arduino_zero_native.pid.3=0x024d
+arduino_zero_native.upload_port.0.vid=0x2341
+arduino_zero_native.upload_port.0.pid=0x804d
+arduino_zero_native.upload_port.1.vid=0x2341
+arduino_zero_native.upload_port.1.pid=0x004d
+arduino_zero_native.upload_port.2.vid=0x2341
+arduino_zero_native.upload_port.2.pid=0x824d
+arduino_zero_native.upload_port.3.vid=0x2341
+arduino_zero_native.upload_port.3.pid=0x024d
 arduino_zero_native.upload.tool=bossac
 arduino_zero_native.upload.protocol=sam-ba
 [...CUT...]
 # Arduino MKR1000
 # -----------------------
 mkr1000.name=Arduino MKR1000
-mkr1000.vid.0=0x2341                   <------- MATCHING IDs
-mkr1000.pid.0=0x804e                   <------- MATCHING IDs
-mkr1000.vid.1=0x2341
-mkr1000.pid.1=0x004e
-mkr1000.vid.2=0x2341
-mkr1000.pid.2=0x824e
-mkr1000.vid.3=0x2341
-mkr1000.pid.3=0x024e
+mkr1000.upload_port.0.vid=0x2341       <------- MATCHING IDs
+mkr1000.upload_port.0.pid=0x804e       <------- MATCHING IDs
+mkr1000.upload_port.1.vid=0x2341
+mkr1000.upload_port.1.pid=0x004e
+mkr1000.upload_port.2.vid=0x2341
+mkr1000.upload_port.2.pid=0x824e
+mkr1000.upload_port.3.vid=0x2341
+mkr1000.upload_port.3.pid=0x024e
 mkr1000.debug.tool=gdb
 mkr1000.upload.tool=bossac
 mkr1000.upload.protocol=sam-ba
@@ -306,24 +297,24 @@ mkr1000.upload.protocol=sam-ba
 
 As we can see the only board that has the two properties matching is the `mkr1000`, in this case the CLI knows that the board is surely an MKR1000.
 
-Note that `vid` and `pid` properties are just free text key/value pairs: the discovery may returns basically anything, the board just needs to have the same properties defined in `boards.txt` to be identified.
+Note that `vid` and `pid` properties are just free text key/value pairs: the discovery may return basically anything, the board just needs to have the same properties defined in `boards.txt` as `upload_port.*` to be identified.
 
 We can also specify multiple identification properties for the same board using the `.N` suffix, for example:
 
 ```
 myboard.name=My Wonderful Arduino Compatible Board
-myboard.pears=20
-myboard.apples=30
+myboard.upload_port.pears=20
+myboard.upload_port.apples=30
 ```
 
 will match on `pears=20, apples=30` but:
 
 ```
 myboard.name=My Wonderful Arduino Compatible Board
-myboard.pears.0=20
-myboard.apples.0=30
-myboard.pears.1=30
-myboard.apples.1=40
+myboard.upload_port.0.pears=20
+myboard.upload_port.0.apples=30
+myboard.upload_port.1.pears=30
+myboard.upload_port.1.apples=40
 ```
 
 will match on both `pears=20, apples=30` and `pears=30, apples=40` but not `pears=20, apples=40`, in that sense each "set" of identification properties is indepentent from each other and cannot be mixed for port matching.
@@ -431,15 +422,12 @@ Here another example:
     "address": "192.168.1.232",
     "label": "SSH on my-board ()192.168.1.232)",
     "protocol": "ssh",
-    "protocolLabel": "SSH Network port"
-      "properties": {
-        "macprefix": "AA:BB:CC",
-        "macaddress": "AA:BB:CC:DD:EE:FF"
-      },
-      "identificationPrefs": {
-        "macprefix": "AA:BB:CC"
-      }
-   }
+    "protocolLabel": "SSH Network port",
+    "properties": {
+      "macprefix": "AA:BB:CC",
+      "macaddress": "AA:BB:CC:DD:EE:FF"
+    }
+  }
 }
 ```
 
