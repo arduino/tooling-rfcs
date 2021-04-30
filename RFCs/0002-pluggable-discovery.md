@@ -1,4 +1,4 @@
-# Pluggable Discovery
+# Pluggable Discovery protocol (Version 1.0.0)
 
 ## Overview
 
@@ -46,7 +46,33 @@ These tools must be in the form of executables that can be launched as a subproc
 
 All the commands listed in this specification must be implemented in the discovery.
 
-After startup, the tool will just stay idle waiting for commands. The available commands are: `START`, `STOP`, `QUIT`, `LIST` and `START_SYNC`.
+After startup, the tool will just stay idle waiting for commands. The available commands are: `HELLO`, `START`, `STOP`, `QUIT`, `LIST` and `START_SYNC`.
+
+#### HELLO command
+
+`HELLO` is the **first command that must be sent** to the discovery to tell the name of the client and the version of the pluggable discovery protocol that the client supports.
+The syntax of the command is:
+
+`HELLO <PROTOCOL_VERSION> "<USER_AGENT>"`
+
+- `<PROTOCOL_VERSION>` is the protocol version (currently `1.0.0`)
+
+- `<USER_AGENT>` is the name and version of the client (double-quotes `"` are not allowed)
+
+some examples:
+
+- `HELLO 1.0.0 "Arduino IDE 1.8.13"`
+
+- `HELLO 1.0.0 "arduino-cli 1.2.3"`
+
+the response to the command is:
+
+```JSON
+{
+  "eventType": "hello",
+  "message": "OK"
+}
+```
 
 #### START command
 
