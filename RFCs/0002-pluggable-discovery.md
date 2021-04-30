@@ -319,6 +319,22 @@ myboard.upload_port.1.apples=40
 
 will match on both `pears=20, apples=30` and `pears=30, apples=40` but not `pears=20, apples=40`, in that sense each "set" of identification properties is indepentent from each other and cannot be mixed for port matching.
 
+#### Backward compatibility considerations
+
+Many platforms predating the pluggable discovery have the following definitions for board identification:
+
+```
+myboard.vid=0x1234
+myboard.pid=0x4567
+```
+
+to ensure backward compatibility we will transparently and automatically convert these definitions into the new format
+
+```
+myboard.upload_port.0.vid=0x1234
+myboard.upload_port.0.pid=0x4567
+```
+
 ### Upload (state of the art)
 
 In this section we will discuss the current status of the upload business logic in the IDE/CLI.
