@@ -312,9 +312,6 @@ in this case we can use `vid` and `pid` to identify the board. The `serialNumber
 arduino_zero_edbg.name=Arduino Zero (Programming Port)
 arduino_zero_edbg.upload_port.vid=0x03eb
 arduino_zero_edbg.upload_port.pid=0x2157
-arduino_zero_edbg.debug.tool=gdb
-arduino_zero_edbg.upload.tool=openocd
-arduino_zero_edbg.upload.protocol=sam-ba
 [...CUT...]
 # Arduino Zero (Native USB Port)
 # --------------------------------------
@@ -327,8 +324,6 @@ arduino_zero_native.upload_port.2.vid=0x2341
 arduino_zero_native.upload_port.2.pid=0x824d
 arduino_zero_native.upload_port.3.vid=0x2341
 arduino_zero_native.upload_port.3.pid=0x024d
-arduino_zero_native.upload.tool=bossac
-arduino_zero_native.upload.protocol=sam-ba
 [...CUT...]
 # Arduino MKR1000
 # -----------------------
@@ -341,9 +336,6 @@ mkr1000.upload_port.2.vid=0x2341
 mkr1000.upload_port.2.pid=0x824e
 mkr1000.upload_port.3.vid=0x2341
 mkr1000.upload_port.3.pid=0x024e
-mkr1000.debug.tool=gdb
-mkr1000.upload.tool=bossac
-mkr1000.upload.protocol=sam-ba
 [...CUT...]
 ```
 
