@@ -247,13 +247,39 @@ discovery.teensy.pattern="{runtime.tools.teensy_ports.path}/hardware/tools/teens
 
 in this case the platform provides a new `teensy` discovery and the command line tool named `teensy_ports` is launched with the `-J2` parameter to start the discovery tool.
 
+#### Using a discovery made by a 3rd party
+
+A platform may opt to depend on a discovery developed by a 3rd party instead of writing and maintaining his own. Since writing a good-quality cross-platform discovery is very hard and time consuming, we expect this option to be used by the majority of developers.
+
+To depend on a 3rd party discovery the platform must add the following directive in the `platform.txt` file:
+
+```
+discovery.required=PLATFORM:ARCHITECTURE:DISCOVERY_ID
+```
+
+or if the platform needs more discoveries:
+
+```
+discovery.required.0=PLATFORM:ARCHITECTURE:DISCOVERY_ID_1
+discovery.required.1=PLATFORM:ARCHITECTURE:DISCOVERY_ID_2
+...
+```
+
+The `PACKAGER:ARCHITECTURE:DISCOVERY_ID` field represents a unique identifier to a 3rd party discovery in particular the `PACKAGER:ARCHITECTURE:...` part is the same as in the FQBN for the boards.
+
+For example if a platform needs the `network` discovery from the Arduino AVR platform it may specify it with:
+
+```
+discovery.required=arduino:avr:network
+```
+
 #### Duplicate discoveries
 
 It may happen that different 3rd party platforms provides the same discovery or different versions of the same discovery or, worse, different version of the same discovery launched with different parameters.
 
 We can partially handle this if the `DISCOVERY_ID` field in `platform.txt` is well defined: from the CLI we could group together the platforms that requires the same discovery and launch the latest version available just once. How the different 3rd party will agree on the `DISCOVERY_ID` value population is TBD.
 
-In case different discoveries provide conflicting information (for example if two discoveries provide different information for the same port address) we could partially mitigate the issue by giving priority to the discovery that is bundled with the package of the selected board.
+In case different discoveries provide conflicting information (for example if two discoveries provide different information for the same port address) we could partially mitigate the issue by giving priority to the discovery that is used by the package of the selected board.
 
 #### Board identification
 
