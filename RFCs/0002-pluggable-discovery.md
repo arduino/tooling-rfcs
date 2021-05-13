@@ -207,7 +207,7 @@ The `add` event looks like the following:
 }
 ```
 
-it basically provides the same information as the `list` event but for a single port. After calling `START_SYNC` an initial burst of add events may be generated in sequence to report all the ports available at the moment of the start.
+It basically provides the same information as the `list` event but for a single port. After calling `START_SYNC` an initial burst of add events must be generated in sequence to report all the ports available at the moment of the start.
 
 The `remove` event looks like the following:
 
