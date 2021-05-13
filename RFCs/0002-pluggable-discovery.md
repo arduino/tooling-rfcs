@@ -302,7 +302,6 @@ Some port `properties` may not be precise enough to uniquely identify a board, i
 Let’s see an example to clarify things a bit, let's suppose that we have the following `properties` coming from the serial discovery:
 
 ```JSON
-[...CUT...]
   "port": {
     "address": "/dev/ttyACM0",
     "properties": {
@@ -311,7 +310,6 @@ Let’s see an example to clarify things a bit, let's suppose that we have the f
       "serialNumber": "EBEABFD6514D32364E202020FF10181E",
       "name": "ttyACM0"
     }
-[...CUT...]
 ```
 
 in this case we can use `vid` and `pid` to identify the board. The `serialNumber`, instead, is unique for that specific instance of the board so it can't be used to identify the board model. Let’s suppose we have the following `boards.txt`:
