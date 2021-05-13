@@ -463,10 +463,6 @@ For example, the following port metadata coming from a pluggable discovery:
       "vid": "0x2341",
       "serialNumber": "EBEABFD6514D32364E202020FF10181E",
       "name": "ttyACM0"
-    },
-    "identificationPrefs": {
-      "pid": "0x804e",
-      "vid": "0x2341"
     }
   }
 }
