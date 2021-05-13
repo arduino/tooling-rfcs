@@ -221,7 +221,7 @@ The `remove` event looks like the following:
 }
 ```
 
-the content is straightforward, in this case only the `address` and `protocol` fields are reported.
+The content is straightforward, in this case only the `address` and `protocol` fields are reported.
 
 If the information about a port needs to be updated the discovery may send a new `add` message for the same port address and protocol without sending a `remove` first: this means that all the previous information about the port must be discarded and replaced with the new one.
 
