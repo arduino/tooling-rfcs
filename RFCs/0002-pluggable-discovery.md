@@ -492,7 +492,7 @@ Here another example:
   "eventType": "add",
   "port": {
     "address": "192.168.1.232",
-    "label": "SSH on my-board ()192.168.1.232)",
+    "label": "SSH on my-board (192.168.1.232)",
     "protocol": "ssh",
     "protocolLabel": "SSH Network port",
     "properties": {
