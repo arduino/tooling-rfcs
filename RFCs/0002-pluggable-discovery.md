@@ -26,7 +26,7 @@ The pluggable discovery aims to provide a solution to these problems.
 
 - A communication port may use any kind of **protocol**
 
-- Software support for a new **protocol** must be added to the system as a **plugin**
+- Software support for a new **protocol** must be added to the system **using an external command line tool**
 
 - Each port must be **enumerated/discovered**
 
