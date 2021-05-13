@@ -50,12 +50,12 @@ After startup, the tool will just stay idle waiting for commands. The available 
 
 #### HELLO command
 
-`HELLO` is the **first command that must be sent** to the discovery to tell the name of the client and the version of the pluggable discovery protocol that the client supports.
+`HELLO` is the **first command that must be sent** to the discovery to tell the name of the client/IDE and the version of the pluggable discovery protocol that the client/IDE supports.
 The syntax of the command is:
 
 `HELLO <PROTOCOL_VERSION> "<USER_AGENT>"`
 
-- `<PROTOCOL_VERSION>` is the protocol version (currently `1.0.0`)
+- `<PROTOCOL_VERSION>` is the maximum protocol version supported by the client/IDE (currently `1.0.0`)
 
 - `<USER_AGENT>` is the name and version of the client (double-quotes `"` are not allowed)
 
@@ -70,9 +70,16 @@ the response to the command is:
 ```JSON
 {
   "eventType": "hello",
+  "protocolVersion": "1.0.0",
   "message": "OK"
 }
 ```
+
+The `protocolVersion` field represents the protocol version that will be used in the rest of the communication. There are three possible cases:
+
+- if the client/IDE supports the same or a more recent version of the protocol than the discovery, then the IDE should go into a compatibility mode and use the protocol level supported by the discovery.
+- if the discovery supports a more recent version of the protocol than the client/IDE: the discovery should downgrade itself into compatibility mode and report a `protocolVersion` that is less than or equal to the one supported by the client/IDE.
+- if the discovery cannot go into compatibility mode, it will report the protocol version supported (even if greater than the version supported by the client/IDE) and the client/IDE may decide to terminate the discovery or produce an error/warning.
 
 #### START command
 
