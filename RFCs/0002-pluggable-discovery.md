@@ -475,8 +475,8 @@ will be available on the recipe as the variables:
 {upload.port.vid} = 0x2341
 {upload.port.serialNumber} = EBEABFD6514D32364E202020FF10181E
 {upload.port.name} = ttyACM0
-{serial.port} = ttyACM0                     # for backward compatibility
-{serial.port.file} = /dev/ttyACM0           # only because protocol=serial
+{serial.port} = /dev/ttyACM0                # for backward compatibility
+{serial.port.file} = ttyACM0                # only because protocol=serial
 ```
 
 Here another example:
