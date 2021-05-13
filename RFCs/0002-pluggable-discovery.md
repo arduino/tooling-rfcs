@@ -167,7 +167,8 @@ To make the above more clear let’s show an example with the `serial_discovery`
       "properties": {
         "pid": "0x804e",
         "vid": "0x2341",
-        "serialNumber": "EBEABFD6514D32364E202020FF10181E"
+        "serialNumber": "EBEABFD6514D32364E202020FF10181E",
+        "name": "ttyACM0"
       }
     }
   ]
@@ -197,7 +198,8 @@ The `add` event looks like the following:
     "properties": {
       "pid": "0x804e",
       "vid": "0x2341",
-      "serialNumber": "EBEABFD6514D32364E202020FF10181E"
+      "serialNumber": "EBEABFD6514D32364E202020FF10181E",
+      "name": "ttyACM0"
     },
     "protocol": "serial",
     "protocolLabel": "Serial Port (USB)"
@@ -306,7 +308,8 @@ Let’s see an example to clarify things a bit, let's suppose that we have the f
     "properties": {
       "pid": "0x804e",
       "vid": "0x2341",
-      "serialNumber": "EBEABFD6514D32364E202020FF10181E"
+      "serialNumber": "EBEABFD6514D32364E202020FF10181E",
+      "name": "ttyACM0"
     }
 [...CUT...]
 ```
@@ -458,7 +461,8 @@ For example, the following port metadata coming from a pluggable discovery:
     "properties": {
       "pid": "0x804e",
       "vid": "0x2341",
-      "serialNumber": "EBEABFD6514D32364E202020FF10181E"
+      "serialNumber": "EBEABFD6514D32364E202020FF10181E",
+      "name": "ttyACM0"
     },
     "identificationPrefs": {
       "pid": "0x804e",
@@ -476,6 +480,7 @@ will be available on the recipe as the variables:
 {upload.port.pid} = 0x8043
 {upload.port.vid} = 0x2341
 {upload.port.serialNumber} = EBEABFD6514D32364E202020FF10181E
+{upload.port.name} = ttyACM0
 {serial.port} = ttyACM0                     # for backward compatibility
 {serial.port.file} = /dev/ttyACM0           # only because protocol=serial
 ```
