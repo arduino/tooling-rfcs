@@ -1,4 +1,4 @@
-# Pluggable Discovery protocol (Version 1.0.0)
+# Pluggable Discovery protocol (Version 1)
 
 ## Overview
 
@@ -55,22 +55,22 @@ The syntax of the command is:
 
 `HELLO <PROTOCOL_VERSION> "<USER_AGENT>"`
 
-- `<PROTOCOL_VERSION>` is the maximum protocol version supported by the client/IDE (currently `1.0.0`)
+- `<PROTOCOL_VERSION>` is the maximum protocol version supported by the client/IDE (currently `1`)
 
 - `<USER_AGENT>` is the name and version of the client (double-quotes `"` are not allowed)
 
 some examples:
 
-- `HELLO 1.0.0 "Arduino IDE 1.8.13"`
+- `HELLO 1 "Arduino IDE 1.8.13"`
 
-- `HELLO 1.0.0 "arduino-cli 1.2.3"`
+- `HELLO 1 "arduino-cli 1.2.3"`
 
 the response to the command is:
 
 ```JSON
 {
   "eventType": "hello",
-  "protocolVersion": "1.0.0",
+  "protocolVersion": "1",
   "message": "OK"
 }
 ```
