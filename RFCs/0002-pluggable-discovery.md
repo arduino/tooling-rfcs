@@ -36,7 +36,7 @@ The pluggable discovery aims to provide a solution to these problems.
 
 - A single device may expose multiple ports
 
-## Recommended Solution
+## Proposed Solution
 
 The proposed solution is to provide a tool that can enumerate and discover the ports for a **single specific protocol**. There will be a tool for each supported protocol so, in the end, we will have a “Serial ports discovery”, a “Network port discovery” and so on.
 
