@@ -235,7 +235,7 @@ https://github.com/arduino/serial-discovery#example-of-usage
 
 #### Discovery tool install and launch
 
-Discovery tools should be build natively for each OS and the CLI should run the correct tool for the running OS. This infrastracture is already available for platforms tools so the most natural way forward is to distribute the discoveries as tools within core platforms (in the same way we do for `gcc` or `avrdude`).
+Discovery tools should be built natively for each OS and the CLI should run the correct tool for the running OS. This infrastracture is already available for platform tools so the most natural way forward is to distribute the discoveries as tools within core platforms (in the same way we do for `gcc` or `avrdude`).
 
 Some discovery like the `serial-discovery` must be always available, so they will be part of the `builtin` platform package and installed without the need to be part of a real platform (`builtin` is a dummy package that we use to install tools that are not part of any platforms like `ctags` for example).
 
