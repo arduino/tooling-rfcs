@@ -375,7 +375,7 @@ will match on both `pears=20, apples=30` and `pears=30, apples=40` but not `pear
 
 #### Backward compatibility considerations
 
-Many platforms predating the pluggable discovery have the following definitions for board identification:
+Many platforms predating the pluggable discovery have the following definitions for board identification using USB Serial VID/PID:
 
 ```
 myboard.vid=0x1234
