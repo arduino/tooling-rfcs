@@ -460,7 +460,7 @@ myboard.upload.tool.serial=bossac
 myboard.upload.tool.network=arduino_ota
 ```
 
-The selected port address will be provided in the variable `{upload.address}`. Other metadata provided by the discover in the `prefs` section will be provided in the `{upload.port.*}` variables.
+The selected port address will be provided in the variable `{upload.port.address}`. In general, all the metadata provided by the discovery in the `port` section will be provided under the `{upload.port.*}` variables.
 
 For backward compatibility we will keep a copy of the address also in `{serial.port}` and in the specific case of a `protocol=serial` we will populate also `{serial.port.file}`.
 
@@ -487,12 +487,14 @@ For example, the following port metadata coming from a pluggable discovery:
 will be available on the recipe as the variables:
 
 ```
-{upload.address} = /dev/ttyACM0
-{upload.protocol} = serial
-{upload.port.pid} = 0x8043
-{upload.port.vid} = 0x2341
-{upload.port.serialNumber} = EBEABFD6514D32364E202020FF10181E
-{upload.port.name} = ttyACM0
+{upload.port.address} = /dev/ttyACM0
+{upload.port.label} = ttyACM0
+{upload.port.protocol} = serial
+{upload.port.protocolLabel} = Serial Port (USB)
+{upload.port.properties.pid} = 0x8043
+{upload.port.properties.vid} = 0x2341
+{upload.port.properties.serialNumber} = EBEABFD6514D32364E202020FF10181E
+{upload.port.properties.name} = ttyACM0
 {serial.port} = /dev/ttyACM0                # for backward compatibility
 {serial.port.file} = ttyACM0                # only because protocol=serial
 ```
@@ -518,10 +520,12 @@ Here another example:
 that is translated to:
 
 ```
-{upload.address} = 192.168.1.232
-{upload.protocol} = ssh
-{upload.port.macprefix} = AA:BB:CC
-{upload.port.macaddress} = AA:BB:CC:DD:EE:FF
+{upload.port.address} = 192.168.1.232
+{upload.port.label} = SSH on my-board (192.168.1.232)
+{upload.port.protocol} = ssh
+{upload.port.protocolLabel} = SSH Network port
+{upload.port.properties.macprefix} = AA:BB:CC
+{upload.port.properties.macaddress} = AA:BB:CC:DD:EE:FF
 {serial.port} = 192.168.1.232                  # for backward compatibility
 ```
 
@@ -537,7 +541,7 @@ with:
 
 ```
 tools.arduino_ota.upload.pattern="{runtime.tools.arduinoOTA.path}/bin/arduinoOTA"
-                                 -address {upload.address} -port 65280
+                                 -address {upload.port.address} -port 65280
                                  -sketch "{build.path}/{build.project_name}.bin"
 ```
 
@@ -559,7 +563,7 @@ tools.arduino_ota.upload.field.username=Username
 tools.arduino_ota.upload.field.password=Password
 tools.arduino_ota.upload.field.password.secret=true
 tools.arduino_ota.upload.pattern="{runtime.tools.arduinoOTA.path}/bin/arduinoOTA"
-                                 -address {upload.address} -port 65280
+                                 -address {upload.port.address} -port 65280
                                  -username "{upload.user.username}
                                  -password "{upload.user.password}"
                                  -sketch "{build.path}/{build.project_name}.bin"
