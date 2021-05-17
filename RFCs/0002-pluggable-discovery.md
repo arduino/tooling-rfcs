@@ -382,6 +382,13 @@ myboard.vid=0x1234
 myboard.pid=0x4567
 ```
 
+or:
+
+```
+myboard.vid.0=0x1234
+myboard.pid.0=0x4567
+```
+
 to ensure backward compatibility we will transparently and automatically convert these definitions into the new format
 
 ```
