@@ -291,7 +291,7 @@ discovery.required.0=builtin:builtin:serial_discovery
 discovery.required.1=builtin:builtin:network_discovery
 ```
 
-For backward compatiblity, if a platform does not declare any discovery (using the `discovery.*` properties in `platform.txt`) it will automatically use all the builtin discoveries. This will allow all legacy platforms to softly migrate to pluggable discovery.
+For backward compatibility, if a platform does not declare any discovery (using the `discovery.*` properties in `platform.txt`) it will automatically use all the builtin discoveries. This will allow all legacy platforms to softly migrate to pluggable discovery.
 
 #### Duplicate discoveries
 
