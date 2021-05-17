@@ -239,10 +239,6 @@ https://github.com/arduino/serial-discovery#example-of-usage
 
 Discovery tools should be built natively for each OS and the CLI should run the correct tool for the running OS. This infrastracture is already available for platform tools so the most natural way forward is to distribute the discoveries as tools within core platforms (in the same way we do for `gcc` or `avrdude`).
 
-Some discovery like the `serial-discovery` must be always available, so they will be part of the `builtin` platform package and installed without the need to be part of a real platform (`builtin` is a dummy package that we use to install tools that are not part of any platforms like `ctags` for example).
-
-The CLI will run `serial-discovery`, and other “builtin“ discoveries that we may want, by default.
-
 3rd party platforms may add other discoveries by providing them as tools dependencies for their platform and by adding a directive to their `platform.txt` that informs the CLI that a new discovery is available.
 
 ```
@@ -283,6 +279,19 @@ For example if a platform needs the `network` discovery from the Arduino AVR pla
 ```
 discovery.required=arduino:avr:network
 ```
+
+#### built-in discoveries and backward compatibliity consideration
+
+Some discoveries like the Arduino `serial-discovery` or the Arduino `network-discovery` must be always available, so they will be part of the `builtin` platform package and installed without the need to be part of a real platform (`builtin:builtin` is a dummy package that we use to install tools that are not part of any platforms like `ctags` for example).
+
+If a platform requires the builtin discoveries it must declare the usage with:
+
+```
+discovery.required.0=builtin:builtin:serial_discovery
+discovery.required.1=builtin:builtin:network_discovery
+```
+
+For backward compatiblity, if a platform does not declare any discovery (using the `discovery.*` properties in `platform.txt`) it will automatically use all the builtin discoveries. This will allow all legacy platforms to softly migrate to pluggable discovery.
 
 #### Duplicate discoveries
 
