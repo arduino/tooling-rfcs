@@ -177,7 +177,9 @@ To make the above more clear let’s show an example with the `serial_discovery`
 
 In this case the serial port metadata comes from an USB serial converter. Inside the `properties` we have all the properties of the port, and some of them may be useful for product identification (in this case only USB VID/PID is useful to identify the board model).
 
-The `LIST` command performs a one-shot polling of the ports. If you need continuous monitoring of ports you should use the `START_SYNC` command.
+The `LIST` command performs a one-shot polling of the ports. The discovery should answer as soon as reasonably possible, without any additional delay.
+
+Some discoveries may require some time to discover a new port (for example network protocols like MDNS, Bluetooth, etc. requires some seconds to receive the broadcasts from all available clients) in that case is fine to answer with an empty or incomplete list.
 
 #### START_SYNC command
 
