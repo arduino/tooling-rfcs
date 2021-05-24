@@ -569,6 +569,65 @@ tools.arduino_ota.upload.pattern="{runtime.tools.arduinoOTA.path}/bin/arduinoOTA
                                  -sketch "{build.path}/{build.project_name}.bin"
 ```
 
+#### Support for upload "without a port" (`no-port` dummy protocol)
+
+Some upload tools already have the port detection builtin so there is no need to specify an upload port (for example the `openocd` tool is often able to autodetect the devices to upload by itself).
+
+To support this particular use case a dummy `no-port` protocol has been reserved:
+
+```
+myboard.upload.tool.no-port=openocd_without_port
+```
+
+The `no-port` upload recipe will be selected when:
+
+- The upload port is not specified
+
+or
+
+- The upload port is specified but the protocol of the selected port doesn't match any of the available upload protocols for a board
+
+Let's see some examples to clarify:
+
+```
+board1.upload.tool.no-port=openocd_without_port
+
+board2.upload.tool.serial=bossac
+board2.upload.tool.no-port=openocd_without_port
+
+board3.upload.tool.serial=bossac
+```
+
+In the `board1` case: the `openocd_without_port` recipe will be always used, even if a port has been selected by the user.
+
+In the `board2` case: the `bossac` recipe will be used if the port selected is a `serial` port, otherwise the `openocd_without_port` will be used in all other cases (even if a port has been selected by the user).
+
+In the `board3` case: the `bossac` recipe will be used if the port selected is a `serial` port, otherwise the upload will fail.
+
+A lot of existing platforms already have recipes without an explicit port address, in this case the upload tool specified in the old (non-pluggable) way will be considered as a `no-port` upload, for example let's consider the Arduino Zero board:
+
+```
+# Arduino Zero (Prorgamming Port)
+# ---------------------------------------
+arduino_zero_edbg.name=Arduino Zero (Programming Port)
+arduino_zero_edbg.vid.0=0x03eb
+arduino_zero_edbg.pid.0=0x2157
+
+arduino_zero_edbg.upload.tool=openocd        <--- CONSIDERED AS no-port PROT.
+arduino_zero_edbg.upload.protocol=sam-ba
+arduino_zero_edbg.upload.maximum_size=262144
+arduino_zero_edbg.upload.maximum_data_size=32768
+arduino_zero_edbg.upload.use_1200bps_touch=false
+arduino_zero_edbg.upload.wait_for_upload_port=false
+arduino_zero_edbg.upload.native_usb=false
+```
+
+in this case the upload definition will be always considered as a `no-port` by default, in other words, it will be automatically converted into:
+
+```
+arduino_zero_edbg.upload.no-port.tool=openocd
+```
+
 ## Open Questions
 
 ### CLI command line UX considerations
