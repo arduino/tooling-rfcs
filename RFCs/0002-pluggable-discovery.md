@@ -547,7 +547,7 @@ tools.arduino_ota.upload.pattern="{runtime.tools.arduinoOTA.path}/bin/arduinoOTA
 
 #### User provided fields
 
-The recipe may require some user-entered fields (like username or password). In this case the recipe must use the special placeholder `{upload.user.FIELD_NAME}` where `FIELD_NAME` must be declared separately in the recipe using the following format:
+The recipe may require some user-entered fields (like username or password). In this case the recipe must use the special placeholder `{upload.field.FIELD_NAME}` where `FIELD_NAME` must be declared separately in the recipe using the following format:
 
 ```
 tools.UPLOAD_RECIPE_ID.upload.field.FIELD_NAME=FIELD_LABEL
@@ -564,8 +564,8 @@ tools.arduino_ota.upload.field.password=Password
 tools.arduino_ota.upload.field.password.secret=true
 tools.arduino_ota.upload.pattern="{runtime.tools.arduinoOTA.path}/bin/arduinoOTA"
                                  -address {upload.port.address} -port 65280
-                                 -username "{upload.user.username}
-                                 -password "{upload.user.password}"
+                                 -username "{upload.field.username}
+                                 -password "{upload.field.password}"
                                  -sketch "{build.path}/{build.project_name}.bin"
 ```
 
