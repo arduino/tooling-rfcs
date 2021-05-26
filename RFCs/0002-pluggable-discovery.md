@@ -48,7 +48,7 @@ All the commands listed in this specification must be implemented in the discove
 
 After startup, the tool will just stay idle waiting for commands. The available commands are: `HELLO`, `START`, `STOP`, `QUIT`, `LIST` and `START_SYNC`.
 
-The discovery must not introduce any delay in the protocol and must respond to all commands as fast as possible.
+After each command the client always expect a response from the discovery. The discovery must not introduce any delay and must respond to all commands as fast as possible.
 
 #### HELLO command
 
@@ -241,6 +241,8 @@ After this message the discoery will send `add` and `remove` event asyncronoushl
 ```
 
 The `error` field must be set to `true` and the `message` field should contain a description of the error.
+
+Once in "event" mode, the discovery is allowed to send `add` and `remove` messages asynchronously in realtime, this means that the client must be able to handle these incoming messages at any moment.
 
 The `add` event looks like the following:
 
