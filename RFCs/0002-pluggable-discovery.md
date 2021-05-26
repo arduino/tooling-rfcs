@@ -48,9 +48,11 @@ All the commands listed in this specification must be implemented in the discove
 
 After startup, the tool will just stay idle waiting for commands. The available commands are: `HELLO`, `START`, `STOP`, `QUIT`, `LIST` and `START_SYNC`.
 
+The discovery must not introduce any delay in the protocol and must respond to all commands as fast as possible.
+
 #### HELLO command
 
-`HELLO` is the **first command that must be sent** to the discovery to tell the name of the client/IDE and the version of the pluggable discovery protocol that the client/IDE supports.
+`HELLO` **must be the first command sent** to the discovery to tell the name of the client/IDE and the version of the pluggable discovery protocol that the client/IDE supports.
 The syntax of the command is:
 
 `HELLO <PROTOCOL_VERSION> "<USER_AGENT>"`
@@ -92,6 +94,18 @@ The `START` command initializes and start the discovery internal subroutines. Th
 }
 ```
 
+If the discovery could not start, for any reason, it must report the error with:
+
+```JSON
+{
+  "eventType": "start",
+  "error": true,
+  "message": "Permission error"
+}
+```
+
+The `error` field must be set to `true` and the `message` field should contain a description of the error.
+
 #### STOP command
 
 The `STOP` command stops the discovery internal subroutines and possibly free the internally used resources. This command should be called if the client wants to pause the discovery for a while. The response to the command is:
@@ -102,6 +116,18 @@ The `STOP` command stops the discovery internal subroutines and possibly free th
   "message": "OK"
 }
 ```
+
+If an error occurs:
+
+```JSON
+{
+  "eventType": "stop",
+  "error": true,
+  "message": "Resource busy"
+}
+```
+
+The `error` field must be set to `true` and the `message` field should contain a description of the error.
 
 #### QUIT command
 
@@ -114,7 +140,7 @@ The `QUIT` command terminates the discovery. The response to `QUIT` is:
 }
 ```
 
-after this output the discovery exits.
+after this output the discovery exits. This command is supposed to always succeed.
 
 #### LIST command
 
@@ -181,11 +207,42 @@ The `LIST` command performs a one-shot polling of the ports. The discovery shoul
 
 Some discoveries may require some time to discover a new port (for example network protocols like MDNS, Bluetooth, etc. requires some seconds to receive the broadcasts from all available clients) in that case is fine to answer with an empty or incomplete list.
 
+If an error occurs and the discovery can't complete the enumeration is must report the error with:
+
+```JSON
+{
+  "eventType": "list",
+  "error": true,
+  "message": "Resource busy"
+}
+```
+
+The `error` field must be set to `true` and the `message` field should contain a description of the error.
+
 #### START_SYNC command
 
-The `START_SYNC` command puts the tool in "events" mode: the discovery will send `add` and `remove` events each time a new port is detected or removed respectively.
+The `START_SYNC` command puts the tool in "events" mode: the discovery will send `add` and `remove` events each time a new port is detected or removed respectively. If the discovery goes into "events" mode successfully the response to this command is:
 
-If the CLI is used in command-line mode (`arduino-cli board list` command) then we need a one-shot output and we can run the discoveries with the `LIST` command instead. Note that some discoveries may not be able to `LIST` ports immediately after the launch (in particular network protocols like MDNS, Bluetooth, etc. requires some seconds to receive the broadcasts from all available clients).
+```JSON
+{
+  "eventType": "start_sync",
+  "message": "OK"
+}
+```
+
+After this message the discoery will send `add` and `remove` event asyncronoushly (more on that later). If an error occurs and the discovery can't go in "events" mode the error must be reported as:
+
+```JSON
+{
+  "eventType": "start_sync",
+  "error": true,
+  "message": "Resource busy"
+}
+```
+
+The `error` field must be set to `true` and the `message` field should contain a description of the error.
+
+If the CLI is used in command-line mode (for example the `arduino-cli board list` command) then we need a one-shot output and we can run the discoveries with the `LIST` command instead of using `START_SYNC`. Note that some discoveries may not be able to `LIST` ports immediately after the launch (in particular network protocols like MDNS, Bluetooth, etc. requires some seconds to receive the broadcasts from all available clients).
 
 If the CLI is running in daemon mode, ideally, all the installed discoveries should be started simultaneously in “event mode” (with `START_SYNC`) and the list of available ports should be cached inside the CLI daemon.
 
@@ -226,6 +283,20 @@ The `remove` event looks like the following:
 The content is straightforward, in this case only the `address` and `protocol` fields are reported.
 
 If the information about a port needs to be updated the discovery may send a new `add` message for the same port address and protocol without sending a `remove` first: this means that all the previous information about the port must be discarded and replaced with the new one.
+
+#### Invalid commands
+
+If the client sends an invalid or malformed command, the discovery should answer with:
+
+```JSON
+{
+  "eventType": "command_error",
+  "error": true,
+  "message": "Unknown command XXXX"
+}
+```
+
+#### Reference implementations
 
 A demo tool is available here:
 https://github.com/arduino/serial-discovery
