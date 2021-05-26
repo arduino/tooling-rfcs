@@ -242,10 +242,6 @@ After this message the discoery will send `add` and `remove` event asyncronoushl
 
 The `error` field must be set to `true` and the `message` field should contain a description of the error.
 
-If the CLI is used in command-line mode (for example the `arduino-cli board list` command) then we need a one-shot output and we can run the discoveries with the `LIST` command instead of using `START_SYNC`. Note that some discoveries may not be able to `LIST` ports immediately after the launch (in particular network protocols like MDNS, Bluetooth, etc. requires some seconds to receive the broadcasts from all available clients).
-
-If the CLI is running in daemon mode, ideally, all the installed discoveries should be started simultaneously in “event mode” (with `START_SYNC`) and the list of available ports should be cached inside the CLI daemon.
-
 The `add` event looks like the following:
 
 ```JSON
@@ -295,6 +291,14 @@ If the client sends an invalid or malformed command, the discovery should answer
   "message": "Unknown command XXXX"
 }
 ```
+
+#### arduino-cli usage scenario
+
+If `arduino-cli` is used in command-line mode (for example the `arduino-cli board list` command) then we need a one-shot output and we can run the discoveries with the `LIST` command instead of using `START_SYNC`.
+
+Note that some discoveries may not be able to `LIST` ports immediately after the launch (in particular network protocols like MDNS, Bluetooth, etc. requires some seconds, even minutes, to receive the broadcasts from all available clients). This is intrinsic in how the `LIST` command is defined and it's a duty of the client (CLI/IDE) to take it into consideration.
+
+If `arduino-cli` is running in daemon mode, ideally, it should start all the installed discoveries simultaneously in “event mode” (with `START_SYNC`) and the list of available ports should be cached and updated in realtime inside the `arduino-cli` daemon.
 
 #### Reference implementations
 
