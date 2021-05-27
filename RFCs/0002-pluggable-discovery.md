@@ -500,7 +500,7 @@ For backward compatibility, if a platform does not declare any discovery (using 
 
 In case different discoveries provide conflicting information (for example if two discoveries provide different information for the same port) we could partially mitigate the issue by giving priority to the discovery that is used by the package of the selected board.
 
-#### Board identification
+### Board identification
 
 The `properties` associated to a port can be used to identify the board attached to that port. The algorithm is simple:
 
