@@ -310,73 +310,195 @@ https://github.com/arduino/serial-discovery
 A typical usage scenario is here:
 https://github.com/arduino/serial-discovery#example-of-usage
 
-### Integration with CLI and core platforms
+### Integration with `arduino-cli` and core platforms
 
-#### Discovery tool install and launch
+In this section we will see how discvoeries are distributed and integrated with Arduino platforms.
 
-Discovery tools should be built natively for each OS and the CLI should run the correct tool for the running OS. This infrastracture is already available for platform tools so the most natural way forward is to distribute the discoveries as tools within core platforms (in the same way we do for `gcc` or `avrdude`).
+#### Discovery tool distribution
 
-3rd party platforms may add other discoveries by providing them as tools dependencies for their platform and by adding a directive to their `platform.txt` that informs the CLI that a new discovery is available.
+The discovery tools must be built natively for each OS and the CLI should run the correct tool for the running OS.
+
+The distribution infrastracture is already available for platform tools, like compilers and uploaders, through `package_index.json` so, the most natural way forward is to distribute also the discoveries in the same way.
+3rd party developers should provide their discovery tools by adding them as resources in the `tools` section of `package_index.json` (at the `packages` level).
+
+Let's see how this looks into a `package_index.json` example:
+
+```diff
+{
+  "packages": [
+    {
+      "name": "arduino",
+      "maintainer": "Arduino",
+      "websiteURL": "http://www.arduino.cc/",
+
+      "platforms": [
+        ...
+      ],
+      "tools": [
+        {
+          "name": "arm-none-eabi-gcc",
+          "version": "4.8.3-2014q1",
+          "systems": [ ... ]
+        },
++       {
++         "name": "ble-discovery", <--- Discovery is distributed as a TOOL
++         "version": "1.0.0",
++         "systems": [
++           {
++             "host": "x86_64-pc-linux-gnu",
++             "url": "http://example.com/ble-disc-1.0.0-linux64.tar.gz",
++             "archiveFileName": "ble-disc-1.0.0-linux64.tar.gz",
++             "checksum": +SHA-256:0123456789abcdef0123456789abcdef0123456789abcdef",
++             "size": "12345678"
++           },
++           ...
++         ]
++       }
+      ],
+    }
+  }
+}
+```
+
+In this case we are adding an hypotetical `ble-discovery` version `1.0.0` to the toolset of the vendor `arduino`. From now on, we can uniquely refer to this discovery with the pair `PACKAGER` and `DISCOVERY_NAME`, in this case `arduino` and `ble-discovery` respectively.
+
+The compressed archive of the discovery must contain only a single executable file (the discovery itself) inside a single root folder. This is mandatory since the CLI will run this file automatically when the discovery is started.
+
+#### Discovery tools integration
+
+Each core platform must refer to the specific discovery tools they need by adding them a new `discoveryDependencies` field of the `package_index.json`. Let's look again at the previous example:
+
+```diff
+{
+  "packages": [
+    {
+      "name": "arduino",
+      "maintainer": "Arduino",
+      "websiteURL": "http://www.arduino.cc/",
+
+      "platforms": [
+        {
+          "name": "Arduino AVR Boards",
+          "architecture": "avr",
+          "version": "1.6.2",
+          ...
+          "toolsDependencies": [
+            {
+              "packager": "arduino",
+              "name": "arm-none-eabi-gcc",
+              "version": "4.8.3-2014q1"
+            },
+            {
+              "packager": "arduino",
+              "name": "CMSIS",
+              "version": "4.5.0"
+            },
+            ...
+          ],
++         "discoveryDependencies": [  <--- Discoveries used in the platform
++           {
++             "packager": "arduino",
++             "name": "ble-discovery"
++                                     <--- Version is not required!
++           }
++         ]
+        },
+
+        {
+          "name": "Arduino SAMD Boards",
+          "architecture": "samd",
+          "version": "1.6.18",
+          ...
+          "toolsDependencies": [ ... ],
++         "discoveryDependencies": [ ... ]
+        }
+
+      ],
+      "tools": [
+        {
+          "name": "arm-none-eabi-gcc",
+          "version": "4.8.3-2014q1",
+          "systems": [ ... ]
+        },
+        {
+          "name": "ble-discovery",
+          "version": "1.0.0",
+          "systems": [ ... ]
+        }
+      ],
+    }
+  }
+}
+```
+
+Adding the needed discoveries in the `discoveryDependencies` allows the CLI to install them together with the platform. Also, differently from the other `toolsDependencies`, the version is not required since it will always be used the latest version available.
+
+Finally, to actually bind a discovery to a platform, we must also declare in the `platform.txt` that we want to use that specific discovery with the direcive:
+
+```
+discovery.required=PLATFORM:DISCOVERY_NAME
+```
+
+or if the platform needs more discoveries we can use the indexed version:
+
+```
+discovery.required.0=PLATFORM:DISCOVERY_ID_1
+discovery.required.1=PLATFORM:DISCOVERY_ID_2
+...
+```
+
+in our specific example the directive should be:
+
+```
+discovery.required=arduino:ble-discovery
+```
+
+#### Using a discovery made by a 3rd party
+
+A platform developer may opt to depend on a discovery developed by a 3rd party instead of writing and maintaining his own.
+
+Since writing a good-quality cross-platform discovery is very hard and time consuming, we expect this option to be the one used by the majority of the developers.
+
+#### Direct discovery integration (not recommended)
+
+A discovery may be directly added to a platform, without passing through the `discoveryDependencies` in `package_index.json`, using the following directive in the `platform.txt`:
 
 ```
 discovery.DISCOVERY_ID.pattern=DISCOVERY_RECIPE
 ```
 
-The CLI will look for directives matching the above pattern. `DISCOVERY_ID` must be replaced by a unique identifier for the particular discovery and `DISCOVERY_RECIPE` must be replaced by the command line to run to launch the discovery. An example could be:
+`DISCOVERY_ID` must be replaced by a unique identifier for the particular discovery and `DISCOVERY_RECIPE` must be replaced by the command line to launch the discovery. An example could be:
 
 ```
 ## Teensy Ports Discovery
 discovery.teensy.pattern="{runtime.tools.teensy_ports.path}/hardware/tools/teensy_ports" -J2
 ```
 
-in this case the platform provides a new `teensy` discovery and the command line tool named `teensy_ports` is launched with the `-J2` parameter to start the discovery tool.
+in this case the platform provides a new `teensy` discovery and the command line tool named `teensy_ports` is launched with the `-J2` parameter to start the discovery tool. In this case the command line pattern may contain any extra parameter in the formula: this is different from the discoveries installed through the `discoveryDependencies` field that are run automatically without any command line parameter.
 
-#### Using a discovery made by a 3rd party
+This kind of integration may turn out useful:
 
-A platform may opt to depend on a discovery developed by a 3rd party instead of writing and maintaining his own. Since writing a good-quality cross-platform discovery is very hard and time consuming, we expect this option to be used by the majority of developers.
+- during the development of a platform (because providing a full `package_index.json` may be cumbersome)
+- if the discovery is specific for a platform and can not be used by 3rd party
 
-To depend on a 3rd party discovery the platform must add the following directive in the `platform.txt` file:
+Anyway, since this kind of integration does not allow reusing a discovery between different platforms, we do not recommend its use.
 
-```
-discovery.required=PLATFORM:ARCHITECTURE:DISCOVERY_ID
-```
+#### built-in discoveries and backward compatibliity considerations
 
-or if the platform needs more discoveries:
+Some discoveries like the Arduino `serial-discovery` or the Arduino `network-discovery` must be always available, so they will be part of the `builtin` package and installed without the need to be part of a real package (`builtin` is a dummy package that we use to install tools that are not part of any platforms like `ctags` for example).
 
-```
-discovery.required.0=PLATFORM:ARCHITECTURE:DISCOVERY_ID_1
-discovery.required.1=PLATFORM:ARCHITECTURE:DISCOVERY_ID_2
-...
-```
-
-The `PACKAGER:ARCHITECTURE:DISCOVERY_ID` field represents a unique identifier to a 3rd party discovery in particular the `PACKAGER:ARCHITECTURE:...` part is the same as in the FQBN for the boards.
-
-For example if a platform needs the `network` discovery from the Arduino AVR platform it may specify it with:
+If a platform requires the builtin discoveries it must declare it with:
 
 ```
-discovery.required=arduino:avr:network
+discovery.required.0=builtin:serial_discovery
+discovery.required.1=builtin:network_discovery
 ```
 
-#### built-in discoveries and backward compatibliity consideration
+For backward compatibility, if a platform does not declare any discovery (using the `discovery.*` properties in `platform.txt`) it will automatically inherits all the builtin discoveries. This will allow all legacy non-pluggable platforms to migrate to pluggable discovery without disruption.
 
-Some discoveries like the Arduino `serial-discovery` or the Arduino `network-discovery` must be always available, so they will be part of the `builtin` platform package and installed without the need to be part of a real platform (`builtin:builtin` is a dummy package that we use to install tools that are not part of any platforms like `ctags` for example).
+#### Conflicting discoveries
 
-If a platform requires the builtin discoveries it must declare the usage with:
-
-```
-discovery.required.0=builtin:builtin:serial_discovery
-discovery.required.1=builtin:builtin:network_discovery
-```
-
-For backward compatibility, if a platform does not declare any discovery (using the `discovery.*` properties in `platform.txt`) it will automatically use all the builtin discoveries. This will allow all legacy platforms to softly migrate to pluggable discovery.
-
-#### Duplicate discoveries
-
-It may happen that different 3rd party platforms provides the same discovery or different versions of the same discovery or, worse, different version of the same discovery launched with different parameters.
-
-We can partially handle this if the `DISCOVERY_ID` field in `platform.txt` is well defined: from the CLI we could group together the platforms that requires the same discovery and launch the latest version available just once. How the different 3rd party will agree on the `DISCOVERY_ID` value population is TBD.
-
-In case different discoveries provide conflicting information (for example if two discoveries provide different information for the same port address) we could partially mitigate the issue by giving priority to the discovery that is used by the package of the selected board.
+In case different discoveries provide conflicting information (for example if two discoveries provide different information for the same port) we could partially mitigate the issue by giving priority to the discovery that is used by the package of the selected board.
 
 #### Board identification
 
