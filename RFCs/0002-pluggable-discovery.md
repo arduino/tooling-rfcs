@@ -490,11 +490,11 @@ Some discoveries like the Arduino `serial-discovery` or the Arduino `network-dis
 If a platform requires the builtin discoveries it must declare it with:
 
 ```
-discovery.required.0=builtin:serial_discovery
-discovery.required.1=builtin:network_discovery
+discovery.required.0=builtin:serial-discovery
+discovery.required.1=builtin:network-discovery
 ```
 
-For backward compatibility, if a platform does not declare any discovery (using the `discovery.*` properties in `platform.txt`) it will automatically inherits all the builtin discoveries. This will allow all legacy non-pluggable platforms to migrate to pluggable discovery without disruption.
+For backward compatibility, if a platform does not declare any discovery (using the `discovery.*` properties in `platform.txt`) it will automatically inherits `builtin:serial-discovery` and `builtin:network-discovery` (but not other `builtin` discoveries that may be possibly added in the future). This will allow all legacy non-pluggable platforms to migrate to pluggable discovery without disruption.
 
 #### Conflicting discoveries
 
