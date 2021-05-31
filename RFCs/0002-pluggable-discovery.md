@@ -803,7 +803,7 @@ In the `board2` case: the `bossac` recipe will be used if the port selected is a
 
 In the `board3` case: the `bossac` recipe will be used if the port selected is a `serial` port, otherwise the upload will fail.
 
-A lot of existing platforms already have recipes without an explicit port address, in this case the upload tool specified in the old (non-pluggable) way will be considered as a `default` protocol upload, for example let's consider the Arduino Zero board:
+A lot of legacy platforms already have recipes without an explicit port address, for example let's consider the Arduino Zero board:
 
 ```
 # Arduino Zero (Prorgamming Port)
@@ -812,7 +812,7 @@ arduino_zero_edbg.name=Arduino Zero (Programming Port)
 arduino_zero_edbg.vid.0=0x03eb
 arduino_zero_edbg.pid.0=0x2157
 
-arduino_zero_edbg.upload.tool=openocd        <--- CONSIDERED AS default PROTOCOL
+arduino_zero_edbg.upload.tool=openocd             <---
 arduino_zero_edbg.upload.protocol=sam-ba
 arduino_zero_edbg.upload.maximum_size=262144
 arduino_zero_edbg.upload.maximum_data_size=32768
@@ -821,11 +821,13 @@ arduino_zero_edbg.upload.wait_for_upload_port=false
 arduino_zero_edbg.upload.native_usb=false
 ```
 
-in this case the upload definition will be always considered as a `default` protocol, in other words, it will be automatically converted into:
+in this case, to ensure backward compatibility, the upload tool specified in the old (non-pluggable) way will be considered as a `default` protocol upload, and it will be automatically converted into:
 
 ```
 arduino_zero_edbg.upload.default.tool=openocd
 ```
+
+Please note that the transformation above is intended only as a backward compatibility helper and it will be applied only on platforms that does not support Pluggable Discovery at all: if any other `*.upload.*.tool` or `discovery.*` definition is found in the platform, the transformation above will **not** be automatically applied.
 
 ## Open Questions
 
