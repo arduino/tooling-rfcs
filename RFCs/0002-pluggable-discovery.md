@@ -72,7 +72,7 @@ the response to the command is:
 ```JSON
 {
   "eventType": "hello",
-  "protocolVersion": "1",
+  "protocolVersion": 1,
   "message": "OK"
 }
 ```
