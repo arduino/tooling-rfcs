@@ -10,9 +10,9 @@ These incompatibilities might arise due to newer versions of a Platform, Tool, o
 
 An Arduino project is known as Sketch. It comprises its main .ino file plus optional local source code (in the same folder) and an optional extra src folder containing additional sources if required.
 
-The sketch compiles against a set of globally installed libraries and platforms. When said library and/or part of the hardware platform is updated (sometimes introducing some breaking changes) that sketch might not compile anymore or behave differently.
+The sketch compiles against a set of globally installed libraries and platforms. When said library and/or part of the hardware platform is updated, sometimes introducing some breaking changes, that sketch might not compile anymore or behave differently.
 
-Currently, Arduino guarantees no portability and reproducibility of a build at a later time unless exact instructions are provided by the developer to the final user such as the required platform (including version and possibly a 3rd party platform URL to download and install the platform) or all the required libraries including the exact version of each one.
+Currently, Arduino guarantees no portability and reproducibility of a build at a later time unless exact instructions are provided by the developer to the final user, such as the required platform, including version and possibly a 3rd party platform URL to download and install the platform, or all the required libraries including the exact version of each one.
 
 ## Goals
 
@@ -111,7 +111,7 @@ profiles:
     platforms:
       - platform: attiny:avr@1.0.2
         platform_index_url: https://raw.githubusercontent.com/damellis/attiny/ide-1.6.x-boards-manager/package_damellis_attiny_index.json
-     - platform: arduino:avr@1.8.3
+      - platform: arduino:avr@1.8.3
     libraries:
       - ArduinoIoTCloud (1.0.2)
       - Arduino_ConnectionHandler (0.6.4)
@@ -140,7 +140,7 @@ arduino-cli compile [sketch] --profile nanorp
 
 In this case, the sketch will be compiled using the core platform and libraries specified in the `nanorp` profile. If a core platform or a library is missing it will be automatically downloaded and installed on the fly in a dedicated directory inside the data folder. The dedicated storage is not accessible to the user and is meant as a “cache” of the resources used to build the sketch.
 
-When using the “profile” based build, the globally installed platforms and libraries are excluded from the compile and **may not be used in any way**, in other words, the build is isolated from the system and will rely only on the resources specified in the profile: this will ensure that the build is portable and reproducible independently from the platforms and libraries installed in the system.
+When using the profile-based build, the globally installed platforms and libraries are excluded from the compile and **can not be used in any way**, in other words, the build is isolated from the system and will rely only on the resources specified in the profile: this will ensure that the build is portable and reproducible independently from the platforms and libraries installed in the system.
 
 ## Using a default profile
 
@@ -150,7 +150,7 @@ If a `default_profile` is specified in the `sketch.yaml` then the “classic” 
 arduino-cli compile [sketch]
 ```
 
-will trigger a profile-based build using the default profile indicated in the `sketch.yaml`.
+will, instead, trigger a profile-based build using the default profile indicated in the `sketch.yaml`.
 
 ## Vendoring libraries with custom modifications
 
