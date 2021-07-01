@@ -87,13 +87,13 @@ A complete example of a `sketch.yaml` may be the following:
 ```
 profiles:
   nanorp:
-  fqbn: arduino:mbed_nano:nanorp2040connect
-  platforms:
-    - platform: arduino:mbed_nano (2.1.0)
-  libraries:
-    - ArduinoIoTCloud (1.0.2)
-    - Arduino_ConnectionHandler (0.6.4)
-    - TinyDHT sensor library (1.1.0)
+    fqbn: arduino:mbed_nano:nanorp2040connect
+    platforms:
+      - platform: arduino:mbed_nano (2.1.0)
+    libraries:
+      - ArduinoIoTCloud (1.0.2)
+      - Arduino_ConnectionHandler (0.6.4)
+      - TinyDHT sensor library (1.1.0)
 
   another_profile_name:
     notes: testing the limit of the AVR platform, may be unstable
