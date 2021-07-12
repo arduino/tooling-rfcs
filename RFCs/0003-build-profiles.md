@@ -8,11 +8,11 @@ These incompatibilities might arise due to newer versions of a Platform, Tool, o
 
 ## Problem
 
-An Arduino project is known as Sketch. It comprises its main .ino file plus optional local source code (in the same folder) and an optional extra src folder containing additional sources if required.
+An Arduino project is known as Sketch. It comprises its main `.ino` file plus optional local source code (in the same folder) and an optional extra `src` folder containing additional sources if required.
 
 The sketch compiles against a set of globally installed libraries and platforms. When said library and/or part of the hardware platform is updated, sometimes introducing some breaking changes, that sketch might not compile anymore or behave differently.
 
-Currently, Arduino guarantees no portability and reproducibility of a build at a later time unless exact instructions are provided by the developer to the final user, such as the required platform, including version and possibly a 3rd party platform URL to download and install the platform, or all the required libraries including the exact version of each one.
+Currently, the only way to guarantee portability and reproducibility of a sketch build at a later time is for the developer to provide instructions to the final user for the installation of the sketch dependencies, including the exact versions of the boards platform and libraries.
 
 ## Goals
 
@@ -73,7 +73,7 @@ default_profile: <DEFAULT_PROFILE_NAME>
 
 We have a `profiles:` section containing all the profiles. Each field is self-explanatory, in particular:
 
-- `<PROFILE*NAME>` is the profile identifier, it’s a user-defined field, and the allowed characters are alphanumerics, underscore `_`, dot `.`, and dash `-`
+- `<PROFILE_NAME>` is the profile identifier, it’s a user-defined field, and the allowed characters are alphanumerics, underscore `_`, dot `.`, and dash `-`
 - `<PLATFORM>` is the target core platform identifier, for example, `arduino:avr` or `adafruit:samd`
 - `<PLATFORM_VERSION>` is the target core platform version required
 - `<3RD_PARTY_PLATFORM_URL>` is the index URL to download the target core platform (also known as “Additional Boards Manager URLs” in the Arduino IDE). This field can be omitted for the official `arduino:*` platforms.
@@ -156,9 +156,9 @@ will, instead, trigger a profile-based build using the default profile indicated
 
 We will add the possibility to add custom libraries directly in the sketch using the `libraries` subdirectory in the sketch root folder.
 
-A typical usage scenario is when the sketch needs a library that is not part of the library manager, or if the sketch needs a library with some customizations that are not available in the upstream release.
+A typical usage scenario is when the sketch needs a library that is not offered for installation from Library Manager, or if the sketch needs a library with some customizations that are not available in the upstream release.
 
-To accomplish this the idea is to put the custom libraries' source code directly in the sketch `libraries` subdirectory (exactly as we do for the globally installed libraries in the `libraries` subdirectory of the sketchbook root folder). For example:
+To accomplish this the idea is to put the custom libraries' source code directly in the `libraries` subdirectory of the sketch (exactly as we do for the globally installed libraries in the `libraries` subdirectory of the sketchbook root folder). For example:
 
 ```
 ~/Arduino/HumiditySensor$ tree
