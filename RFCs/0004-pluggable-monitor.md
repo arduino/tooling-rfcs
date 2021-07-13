@@ -6,7 +6,7 @@ This document describes how the Pluggable Monitor works and how it should integr
 
 ## Problem
 
-With the introduction of Pluggable Discovery the Arduino platforms are now allowed to seamlessy add support for new type of communication "ports" that can be used to upload new sketches or communicate with the board. In particular the communication with the board until now has been done using the Serial Monitor of the Arduino IDE but, with the new kind of communication protocols enabled by the Pluggable Discovery, this is no more sufficient.
+With the introduction of Pluggable Discovery the Arduino platforms are now allowed to seamlessly add support for new types of communication "ports" that can be used to upload new sketches or communicate with the board. In particular the communication with the board until now has been done using the Serial Monitor of the Arduino IDE but, with the new kind of communication protocols enabled by the Pluggable Discovery, this is no more sufficient.
 
 The Pluggable Monitor aims to allow platforms to provide the missing piece to allow the user to communicate with any kind of port through, virtually, any protocol, not only serial.
 
@@ -22,7 +22,7 @@ The Pluggable Monitor aims to allow platforms to provide the missing piece to al
 
 ## Proposed Solution
 
-Each platforms should provide a tool that can open a connection to a port through a **single specific port protocol**. There will be a tool for each supported protocol so, in the end, we will have a "Serial ports monitor", a "Network port monitor", and so on.
+Each platform should provide a tool that can open a connection to a port through a **single specific port protocol**. There will be a tool for each supported protocol so, in the end, we will have a "Serial port monitor", a "Network port monitor", and so on.
 
 These tools must be in the form of command line executables that can be launched as a subprocess. They will communicate to the parent process via stdin/stdout, in particular a monitor will accept commands as plain text strings from stdin and will send answers back in JSON format on stdout. Each tool will implement the commands to open and control communication ports for a specific protocol as specified in this document. The actual I/O data stream from the communication port will be transferred to the parent process through a separate channel via TCP/IP.
 
@@ -32,7 +32,7 @@ All the commands listed in this specification must be implemented in the monitor
 
 After startup, the tool will just stay idle waiting for commands. The available commands are: `HELLO`, `DESCRIBE`, `CONFIGURE`, `OPEN`, `CLOSE` and `QUIT`.
 
-After each command the client always expect a response from the monitor. The monitor must not introduce any delay and must respond to all commands as fast as possible.
+After each command the client always expects a response from the monitor. The monitor must not introduce any delay and must respond to all commands as fast as possible.
 
 #### HELLO command
 
@@ -145,7 +145,7 @@ or if there is an error:
 }
 ```
 
-The currently selected parameters may be get using the `DESCRIBE` command.
+The currently selected parameters may be obtained using the `DESCRIBE` command.
 
 #### OPEN command
 
@@ -157,7 +157,7 @@ The Client/IDE must first TCP-Listen to a randomly selected port and send it to 
 
 For example, let's suppose that the Client/IDE wants to communicate with the serial port `/dev/ttyACM0` then the sequence of actions to perform will be the following:
 
-1. the Client/IDE must first listen to a random TCP port (let's suppose it choose `32123`)
+1. the Client/IDE must first listen to a random TCP port (let's suppose it chose `32123`)
 1. the Client/IDE sends the command `OPEN 127.0.0.1:32123 /dev/ttyACM0` to the monitor tool
 1. the monitor tool opens `/dev/ttyACM0`
 1. the monitor tool connects via TCP/IP to `127.0.0.1:32123` and start streaming data back and forth
@@ -251,7 +251,7 @@ If the client sends an invalid or malformed command, the monitor should answer w
 
 TODO...
 
-### Integration with `arduino-cli` and core platforms
+### Integration with Arduino CLI and core platforms
 
 In this section we will see how monitors are distributed and integrated with Arduino platforms.
 
@@ -259,10 +259,10 @@ In this section we will see how monitors are distributed and integrated with Ard
 
 The monitor tools must be built natively for each OS and the CLI should run the correct tool for the running OS.
 
-The distribution infrastracture is already available for platform tools, like compilers and uploaders, through `package_index.json` so, the most natural way forward is to distribute also the monitor tools in the same way.
-3rd party developers should provide their monitor tools by adding them as resources in the `tools` section of `package_index.json` (at the `packages` level).
+The distribution infrastructure is already available for platform tools, like compilers and uploaders, through [the Arduino package index](https://arduino.github.io/arduino-cli/latest/package_index_json-specification) so, the most natural way forward is to distribute also the monitor tools in the same way.
+3rd party developers should provide their monitor tools by adding them as resources in the `tools` section of their package index (at the `packages` level).
 
-Let's see how this looks into a `package_index.json` example:
+Let's see an example of adding a monitor tool to a package index:
 
 ```diff
 {
@@ -294,7 +294,7 @@ Let's see how this looks into a `package_index.json` example:
 +             "host": "x86_64-pc-linux-gnu",
 +             "url": "http://example.com/ble-mon-1.0.0-linux64.tar.gz",
 +             "archiveFileName": "ble-mon-1.0.0-linux64.tar.gz",
-+             "checksum": +SHA-256:0123456789abcdef0123456789abcdef0123456789abcdef",
++             "checksum": "SHA-256:0123456789abcdef0123456789abcdef0123456789abcdef",
 +             "size": "12345678"
 +           },
 +           ...
@@ -306,13 +306,13 @@ Let's see how this looks into a `package_index.json` example:
 }
 ```
 
-In this case we are adding an hypotetical `ble-monitor` version `1.0.0` to the toolset of the vendor `arduino`. From now on, we can uniquely refer to this monitor with the pair `PACKAGER` and `MONITOR_NAME`, in this case `arduino` and `ble-monitor` respectively.
+In this case we are adding an hypothetical `ble-monitor` version `1.0.0` to the toolset of the vendor `arduino`. From now on, we can uniquely refer to this monitor with the pair `PACKAGER` and `MONITOR_NAME`, in this case `arduino` and `ble-monitor` respectively.
 
 The compressed archive of the monitor must contain only a single executable file (the monitor itself) inside a single root folder. This is mandatory since the CLI will run this file automatically when a monitor instance is requested.
 
 #### Monitor tools integration
 
-Each core platform must refer to the specific monitor tools they need by adding them (together with the pluggable discoveries...) inside the `discoveryDependencies` field of the `package_index.json`:
+Each core platform must refer to the specific monitor tools they need by adding them (together with the pluggable discoveries...) inside the `discoveryDependencies` field of the Arduino package index:
 
 ```diff
 {
@@ -386,7 +386,7 @@ Each core platform must refer to the specific monitor tools they need by adding 
 }
 ```
 
-Adding the needed monitor tools in the `discoveryDependencies` allows the CLI to install them together with the platform. Also, differently from the other `toolsDependencies`, the version is not required since it will always be used the latest version available.
+Adding the needed monitor tools in the `discoveryDependencies` allows the CLI to install them together with the platform. Also, differently from the other `toolsDependencies`, the version is not required since the latest version available will always be used.
 
 Finally, to bind a monitor to a protocol, we must also declare in the `platform.txt` that we want to use that specific monitor tool for that specific protocol with the direcive:
 
@@ -412,13 +412,13 @@ where `ble` is the port protocol identification returned by the matching pluggab
 
 #### Using a monitor tool made by a 3rd party
 
-A platform developer may opt to depend on a monitor tool developed by a 3rd party instead of writing and maintaining his own.
+A platform developer may opt to depend on a monitor tool developed by a 3rd party instead of writing and maintaining their own.
 
 Since writing a good-quality cross-platform monitor tool is very hard and time consuming, we expect this option to be the one used by the majority of the developers.
 
 #### Direct monitor tool integration (not recommended)
 
-A monitor tool may be directly added to a platform, without passing through the `discoveryDependencies` in `package_index.json`, using the following directive in the `platform.txt`:
+A monitor tool may be directly added to a platform, without passing through the `discoveryDependencies` in the Arduino package index, using the following directive in the `platform.txt`:
 
 ```
 monitor.pattern.PROTOCOL=MONITOR_RECIPE
@@ -434,8 +434,8 @@ in this case the platform provides a new `custom-ble` protocol monitor tool and 
 
 This kind of integration may turn out useful:
 
-- during the development of a platform (because providing a full `package_index.json` may be cumbersome)
-- if the monitor tool is specific for a platform and can not be used by 3rd party
+- during the development of a platform (because providing a full package index may be cumbersome)
+- if the monitor tool is specific to a platform and can not be used by 3rd party
 
 Anyway, since this kind of integration does not allow reusing a monitor tool between different platforms, we do not recommend its use.
 
@@ -450,4 +450,4 @@ monitor.required.serial=builtin:serial-monitor
 monitor.required.network=builtin:network-monitor
 ```
 
-For backward compatibility, if a platform does not declare any discovery or monitor tool (using the `discovery.*` or `monitor.*` properties in `platform.txt` respectively) it will automatically inherits `builtin:serial-monitor` and `builtin:network-monitor` (but not other `builtin` monitor tools that may be possibly added in the future). This will allow all legacy non-pluggable platforms to migrate to pluggable monitor without disruption.
+For backward compatibility, if a platform does not declare any discovery or monitor tool (using the `discovery.*` or `monitor.*` properties in `platform.txt` respectively) it will automatically inherit `builtin:serial-monitor` and `builtin:network-monitor` (but not other `builtin` monitor tools that may be possibly added in the future). This will allow all legacy non-pluggable platforms to migrate to pluggable monitor without disruption.
