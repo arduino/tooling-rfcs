@@ -50,3 +50,24 @@ rules:
       - "false"
       - "on" # Used by GitHub Actions as a workflow key.
     check-keys: true
+
+yaml-files:
+  # Source: https://github.com/ikatyang/linguist-languages/blob/master/data/YAML.json (used by Prettier)
+  - ".clang-format"
+  - ".clang-tidy"
+  - ".gemrc"
+  - ".yamllint"
+  - "glide.lock"
+  - "*.yml"
+  - "*.mir"
+  - "*.reek"
+  - "*.rviz"
+  - "*.sublime-syntax"
+  - "*.syntax"
+  - "*.yaml"
+  - "*.yaml-tmlanguage"
+  - "*.yaml.sed"
+  - "*.yml.mysql"
+
+ignore: |
+  /.git/
