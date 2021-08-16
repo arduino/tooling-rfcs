@@ -1,6 +1,7 @@
+# Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/general/.editorconfig
 # See: https://editorconfig.org/
-# The formatting style defined in this file is the official standardized style to be used in all Arduino projects and
-# should not be modified.
+# The formatting style defined in this file is the official standardized style to be used in all Arduino Tooling
+# projects and should not be modified.
 # Note: indent style for each file type is defined even when it matches the universal config in order to make it clear
 # that this type has an official style.
 
@@ -24,7 +25,7 @@ indent_style = space
 indent_size = 2
 indent_style = space
 
-[*.go]
+[*.{go,mod}]
 indent_style = tab
 
 [*.java]
@@ -39,6 +40,10 @@ indent_style = space
 indent_size = unset
 indent_style = space
 
+[*.proto]
+indent_size = 2
+indent_style = space
+
 [*.py]
 indent_size = 4
 indent_style = space
@@ -50,3 +55,6 @@ indent_style = space
 [*.{yaml,yml}]
 indent_size = 2
 indent_style = space
+
+[{.gitconfig,.gitmodules}]
+indent_style = tab
