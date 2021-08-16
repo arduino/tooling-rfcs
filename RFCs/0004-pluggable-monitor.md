@@ -391,21 +391,21 @@ Adding the needed monitor tools in the `discoveryDependencies` allows the CLI to
 Finally, to bind a monitor to a protocol, we must also declare in the `platform.txt` that we want to use that specific monitor tool for that specific protocol with the direcive:
 
 ```
-monitor.required.PROTOCOL=PLATFORM:MONITOR_NAME
+pluggable_monitor.required.PROTOCOL=PLATFORM:MONITOR_NAME
 ```
 
 the platform can support as many protocols as needed:
 
 ```
-monitor.required.PROTOCOL1=PLATFORM:MONITOR_NAME1
-monitor.required.PROTOCOL2=PLATFORM:MONITOR_NAME2
+pluggable_monitor.required.PROTOCOL1=PLATFORM:MONITOR_NAME1
+pluggable_monitor.required.PROTOCOL2=PLATFORM:MONITOR_NAME2
 ...
 ```
 
 in our specific example the directive should be:
 
 ```
-monitor.required.ble=arduino:ble-monitor
+pluggable_monitor.required.ble=arduino:ble-monitor
 ```
 
 where `ble` is the port protocol identification returned by the matching pluggable discovery.
@@ -421,13 +421,13 @@ Since writing a good-quality cross-platform monitor tool is very hard and time c
 A monitor tool may be directly added to a platform, without passing through the `discoveryDependencies` in the Arduino package index, using the following directive in the `platform.txt`:
 
 ```
-monitor.pattern.PROTOCOL=MONITOR_RECIPE
+pluggable_monitor.pattern.PROTOCOL=MONITOR_RECIPE
 ```
 
 where `MONITOR_RECIPE` must be replaced by the command line to launch the monitor tool for the specific `PROTOCOL`. An example could be:
 
 ```
-monitor.pattern.custom-ble="{runtime.tools.my-ble-monitor.path}/my-ble-monitor" -H
+pluggable_monitor.pattern.custom-ble="{runtime.tools.my-ble-monitor.path}/my-ble-monitor" -H
 ```
 
 in this case the platform provides a new `custom-ble` protocol monitor tool and the command line tool named `my-ble-monitor` is launched with the `-H` parameter to start the monitor tool. In this case the command line pattern may contain any extra parameter in the formula: this is different from the monitor tools installed through the `discoveryDependencies` field that must run without any command line parameter.
@@ -446,8 +446,8 @@ Some monitor tools like the Arduino `serial-monitor` or the Arduino `network-mon
 If a platform requires the builtin monitor tools it must declare it with:
 
 ```
-monitor.required.serial=builtin:serial-monitor
-monitor.required.network=builtin:network-monitor
+pluggable_monitor.required.serial=builtin:serial-monitor
+pluggable_monitor.required.network=builtin:network-monitor
 ```
 
-For backward compatibility, if a platform does not declare any discovery or monitor tool (using the `discovery.*` or `monitor.*` properties in `platform.txt` respectively) it will automatically inherit `builtin:serial-monitor` and `builtin:network-monitor` (but not other `builtin` monitor tools that may be possibly added in the future). This will allow all legacy non-pluggable platforms to migrate to pluggable monitor without disruption.
+For backward compatibility, if a platform does not declare any discovery or monitor tool (using the `pluggable_discovery.*` or `pluggable_monitor.*` properties in `platform.txt` respectively) it will automatically inherit `builtin:serial-monitor` and `builtin:network-monitor` (but not other `builtin` monitor tools that may be possibly added in the future). This will allow all legacy non-pluggable platforms to migrate to pluggable monitor without disruption.
