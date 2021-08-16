@@ -31,8 +31,7 @@ MD024: false
 MD025:
   level: 1
   front_matter_title: '^\s*"?title"?\s*[:=]'
-MD026:
-  punctuation: ":"
+MD026: false
 MD027: false # Prettier
 MD028: false
 MD029:
