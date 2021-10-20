@@ -1,4 +1,4 @@
-# Restore the possibility of using global defines accross a project
+# Restore the possibility of using global defines across a project
 
 ## Overview
 
@@ -6,14 +6,14 @@ This RFC proposes a simple and generic change in the arduino-cli tool (used by a
 
 ## Problem
 
-A long-term issue with the Arduino environment has been the inability for the user to declare macros for them to be available accross all source files (sketch, libraries, not the core).
+A long-term issue with the Arduino environment has been the inability for the user to declare macros for them to be available across all source files (sketch, libraries, not the core).
 
 Both users and library maintainers are restrained in their action because of the lack of globally configurable macro definitions, on which C/C++ historically rely on, but which is not possible from the user point of view in this environment from the beginning.
 
 As a consequence,
 - A user needs to manually edit a library and change the default definitions.
 - A library maintainer who is willing to provide the ability to change the defaults must provide a runtime API (vs compile-time defines) for configuration.  Such API can be space consuming and can be a real issue with small targets. Also noting that nowadays modern c++ code tend to use more and more of template and constexpr which are also a compiler way of implementing preprocessor defines (the reason in this case is performance).
-- Many attemps were proposed during the past 9 years (see appendix)
+- Many attempts were proposed during the past 9 years (see appendix)
 
 Also note that Arduino's `build*extra_flags=` is an installation-wide configuration [barely accessible](https://arduino.github.io/arduino-cli/0.19/platform-specification/#platformlocaltxt) to the average user.
 
@@ -76,7 +76,7 @@ An [on-going pull-request](https://github.com/arduino/arduino-cli/pull/1524) imp
 #### Weaknesses
 
 - Can be seen as competing with [RFC-0003-build-profiles](https://github.com/arduino/tooling-rfcs/blob/main/RFCs/0003-build-profiles.md).
-  But it is not, it rather should be seen as complementary.  Average arduino users may be familiar more with `#define BUFFER_SIZE 128` than with the proposed yaml file which is, beside allowing global defines, and if I understand, mainly aimed at project releasers providing nightly builds accross multiple achitectures.
+  But it is not, it rather should be seen as complementary.  Average arduino users may be familiar more with `#define BUFFER_SIZE 128` than with the proposed yaml file which is, beside allowing global defines, and if I understand, mainly aimed at project releasers providing nightly builds across multiple architectures.
 
 ### 4) Other proposals
 
