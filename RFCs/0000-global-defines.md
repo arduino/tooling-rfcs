@@ -11,6 +11,7 @@ A long-term issue with the Arduino environment has been the inability for the us
 Both users and library maintainers are restrained in their action because of the lack of globally configurable macro definitions, on which C/C++ historically rely on, but which is not possible from the user point of view in this environment from the beginning.
 
 As a consequence,
+
 - A user needs to manually edit a library and change the default definitions.
 - A library maintainer who is willing to provide the ability to change the defaults must provide a runtime API (vs compile-time defines) for configuration.  Such API can be space consuming and can be a real issue with small targets. Also noting that nowadays modern c++ code tend to use more and more of template and constexpr which are also a compiler way of implementing preprocessor defines (the reason in this case is performance).
 - Many attempts were proposed during the past 9 years (see appendix)
@@ -89,5 +90,5 @@ See appendix for a list of still ongoing pull request.
   - https://github.com/arduino/Arduino/pull/1808#issuecomment-103507284 closed claiming for richer APIs in libraries instead of global defines
   - Still opened PR from https://github.com/arduino/arduino-cli/issues/846 \'s OP compiled by @per1234
     (there are quite a number of closed attempts clearly showing the lack of something)
-      - https://github.com/arduino/arduino-builder/pull/29
-      - https://github.com/arduino/arduino-builder/pull/282
+    - https://github.com/arduino/arduino-builder/pull/29
+    - https://github.com/arduino/arduino-builder/pull/282
