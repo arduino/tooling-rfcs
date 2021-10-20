@@ -66,7 +66,7 @@ It is another [closed pull request](https://github.com/arduino/arduino-cli/pull/
 
 ### 3) `sketch_globals.h` next to `sketch.ino`
 
-An [on-going pull-request](https://github.com/arduino/arduino-cli/pull/1524) implements this proposal. It allows the automatic inclusion of "<sketch-name>`_global.h`" file *from sketch and libraries* but not core files.
+An [on-going pull-request](https://github.com/arduino/arduino-cli/pull/1524) implements this proposal. It allows the automatic inclusion of "<sketch-name>`_global.h`" file _from sketch and libraries_ but not core files.
 
 #### Strengths
 
