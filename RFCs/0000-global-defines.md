@@ -12,7 +12,7 @@ Both users and library maintainers are restrained in their action because of the
 
 As a consequence,
 - A user needs to manually edit a library and change the default definitions.
-- A library maintainer who is willing to provide the ability to change the defaults must provide a runtime API (vs compile-time defines) for configuration.  Such API can be space consuming and can be a real issue with small targets. Also noting that nowadays modern c++ code tend to use more and more of template and constexpr which are also a compiler way of implementing preprocessor defines (the reason in this case is performance). 
+- A library maintainer who is willing to provide the ability to change the defaults must provide a runtime API (vs compile-time defines) for configuration.  Such API can be space consuming and can be a real issue with small targets. Also noting that nowadays modern c++ code tend to use more and more of template and constexpr which are also a compiler way of implementing preprocessor defines (the reason in this case is performance).
 - Many attemps were proposed during the past 9 years (see appendix)
 
 Also note that Arduino's `build*extra_flags=` is an installation-wide configuration [barely accessible](https://arduino.github.io/arduino-cli/0.19/platform-specification/#platformlocaltxt) to the average user.
@@ -91,5 +91,3 @@ See appendix for a list of still ongoing pull request.
     (there are quite a number of closed attempts clearly showing the lack of something)
       - https://github.com/arduino/arduino-builder/pull/29
       - https://github.com/arduino/arduino-builder/pull/282
-      
-
