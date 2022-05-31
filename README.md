@@ -70,24 +70,24 @@ First of all, check the existing RFCs. There may already be one for your proposa
 #### Discussion channels
 
 - Talk with the user community on [the Arduino Forum](https://forum.arduino.cc/).
-- Talk with Arduino developers on [the Arduino Developers Mailing List](https://groups.google.com/a/arduino.cc/forum/#!forum/developers).
+- Talk with Arduino developers on [the Arduino Developers Mailing List](https://groups.google.com/a/arduino.cc/g/developers).
 
 ### 2. Write
 
-1. [Fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) this repository.
+1. [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repository.
 1. Copy `0000-template.md` to `RFCs/0000-my-proposal.md` (replacing "my-proposal" with the RFC title). Don't assign an RFC number yet; this is going to be set according to the ID number GitHub assigns the pull request when it's submitted.
 1. Fill in the RFC.
    - If the RFC document requires supplemental files (e.g., graphics), put them under the `RFCs/assets/0000-my-proposal` folder, where "0000-my-proposal" is the proposal file name.
 
 #### Resources
 
-- [Style Guide](https://tools.ietf.org/html/rfc7322)
-- [Requirement levels key words](https://tools.ietf.org/html/rfc2119)
+- [Style Guide](https://datatracker.ietf.org/doc/html/rfc7322)
+- [Requirement levels key words](https://datatracker.ietf.org/doc/html/rfc2119)
 - [Writing guide](https://github.com/inasafe/inasafe/wiki/How-to-write-an-RFC)
 
 ### 3. Submit
 
-1. Submit a [pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests) from your fork to add the RFC file.
+1. Submit a [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) from your fork to add the RFC file.
 1. Check which identifier number GitHub has assigned your pull request. This will be shown immediately after the pull request title, prefixed with `#`.
 1. Rename the RFC file in your fork to use the pull request number, padding with zeros to make the number have four digits. For example, if the pull request number was `#42`, the RFC file should be renamed from `RFCs/0000-my-proposal.md` to `RFCs/0042-my-proposal.md`.
    - Note that any changes you make to the files in the branch of your fork the pull request was submitted from will automatically update the pull request.
@@ -99,7 +99,7 @@ When the pull request is submitted, some automated checks will be done to make s
 ### 5. Review and revision
 
 Interested parties should now review and discuss the RFC. This is done using GitHub's pull request review system:<br />
-https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-request-reviews
+https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews
 
 In order to allow everyone the opportunity to comment, a minimum period of 14 days (starting from the submission of the pull request for review) is provided before merging or rejecting the RFC.
 
@@ -107,9 +107,9 @@ During this time, the RFC author and reviewers should work together to reach con
 
 #### Review
 
-- Comments and discussion about specific lines can be done via [line comments](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/commenting-on-a-pull-request#adding-line-comments-to-a-pull-request).
-- Requests for specific changes to the text can be done using GitHub's ["Suggestions" feature](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/reviewing-proposed-changes-in-a-pull-request#starting-a-review:~:text=Optionally%2C%20to%20suggest%20a%20specific%20change). This allows the RFC author to easily accept them via the GitHub web interface.
-- General feedback and discussion can be done via the [review message](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/reviewing-proposed-changes-in-a-pull-request#submitting-your-review) or in [the pull request conversation thread](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/commenting-on-a-pull-request#about-pull-request-comments).
+- Comments and discussion about specific lines can be done via [line comments](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/commenting-on-a-pull-request#adding-line-comments-to-a-pull-request).
+- Requests for specific changes to the text can be done using GitHub's ["Suggestions" feature](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/reviewing-proposed-changes-in-a-pull-request#:~:text=Optionally%2C%20to%20suggest%20a%20specific%20change). This allows the RFC author to easily accept them via the GitHub web interface.
+- General feedback and discussion can be done via the [review message](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/reviewing-proposed-changes-in-a-pull-request#submitting-your-review) or in [the pull request conversation thread](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/commenting-on-a-pull-request#about-pull-request-comments).
 
 #### Revision
 
@@ -117,9 +117,9 @@ The author can make revisions to the RFC in response to the reviews.
 
 Note that any changes you make to the files in the branch of your fork the pull request was submitted from will automatically update the pull request so there is no need to open a new pull request for the modifications.
 
-If in agreement with a change requested via GitHub's "Suggestions" feature, simply [click the "Commit suggestion" button](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/incorporating-feedback-in-your-pull-request).
+If in agreement with a change requested via GitHub's "Suggestions" feature, simply [click the "Commit suggestion" button](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/incorporating-feedback-in-your-pull-request).
 
-Once a review discussion has been resolved, [click the "Resolve conversation" button](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/commenting-on-a-pull-request#resolving-conversations) to clearly indicate this to all involved parties. This is done automatically for committed "suggestions".
+Once a review discussion has been resolved, [click the "Resolve conversation" button](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/commenting-on-a-pull-request#resolving-conversations) to clearly indicate this to all involved parties. This is done automatically for committed "suggestions".
 
 Although it is normally best practices, during the RFC review process the technique of doing a "squash" or "fixup" and force pushing to the PR branch to maintain an atomic commit history should be avoided. The reason is that this makes it a little more difficult for reviewers to follow the revisions that have been made. The maintainer will squash the commits as needed at the time of the merge.
 
