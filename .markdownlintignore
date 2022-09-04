@@ -1,0 +1,7 @@
+# Source: https://github.com/arduino/tooling-project-assets/blob/main/workflow-templates/assets/check-markdown/.markdownlintignore
+.licenses/
+__pycache__/
+node_modules/
+/RFCs/0002-pluggable-discovery.md
+/RFCs/0003-build-profiles.md
+/RFCs/0004-pluggable-monitor.md
