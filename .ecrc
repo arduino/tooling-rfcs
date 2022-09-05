@@ -1,6 +1,9 @@
 {
   "Exclude": [
     "^LICENSE\\.txt$",
-    "^poetry\\.lock$"
+    "^poetry\\.lock$",
+    "^RFCs/0002-pluggable-discovery.md",
+    "^RFCs/0003-build-profiles.md",
+    "^RFCs/0004-pluggable-monitor.md"
   ]
 }
