@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install editorconfig-checker
-        uses: editorconfig-checker/action-editorconfig-checker@v2.0.0
+        uses: editorconfig-checker/action-editorconfig-checker@v2
 
       - name: Check formatting
         run: editorconfig-checker
