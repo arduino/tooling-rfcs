@@ -18,5 +18,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check formatting
+      - name: Install editorconfig-checker
         uses: editorconfig-checker/action-editorconfig-checker@v2.0.0
+
+      - name: Check formatting
+        run: editorconfig-checker
